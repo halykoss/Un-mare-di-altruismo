@@ -1,1 +1,1 @@
-# -FSC-Progetto
+# FSC-Progetto
