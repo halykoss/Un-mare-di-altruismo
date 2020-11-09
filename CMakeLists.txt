@@ -38,4 +38,4 @@ endif ()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-add_executable(a.out ${GUI_OPTION} main.cpp)
+add_executable(a.out ${GUI_OPTION} src/area.cc main.cpp)
