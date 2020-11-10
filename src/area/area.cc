@@ -7,9 +7,11 @@
 #include "area.h"
 
 using namespace std;
-Area::Area()
+
+Area::Area(Tile* (*mapInit)[45][45])
 	: m_radius(0.42), m_line_width(0.05)
 {
+	map = mapInit;
 	//Glib::signal_timeout().connect( sigc::mem_fun(*this, &Area::on_timeout), 1000 );
 }
 
@@ -28,33 +30,7 @@ bool Area::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
 	int xc, yc;
 	xc = width / 2;
 	yc = height / 2;
-	int fish[45][45] = {0};
-	
-	for (int i = 0; i < 40; i++)
-	{
-		int r1 = rand() % 45, r2 = rand() % 45;
-		if (fish[r1][r2] == 0)
-		{
-			fish[r1][r2] = (int)((float) 100 * rand() / RAND_MAX);
-		}
-		else
-		{
-			i--;
-		}
-	}
 
-	for (int i = 0; i < 5; i++)
-	{
-		int r1 = rand() % 45, r2 = rand() % 45;
-		if (fish[r1][r2] == 0)
-		{
-			fish[r1][r2] = 1;
-		}
-		else
-		{
-			i--;
-		}
-	}
 	for (int i = 0; i < 45; i++)
 	{
 		for (int j = 0; j < 45; j++)
@@ -68,21 +44,14 @@ bool Area::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
 	{
 		for (int j = 0; j < 45; j++)
 		{
-			if (fish[i][j] != 0)
+			if ((*map)[i][j] != 0)
 			{
-				switch (fish[i][j])
-				{
-				case 1:
-					break;
-				default:
-  					cr->save();
-  					cr->arc(j * 20 + 10, i * 20 + 10, 100 / 4.0, 0.0, 2.0 * M_PI); // full circle
-  					cr->set_source_rgba(0.0, 0.0, 0.8, 0.6);    // partially translucent
-  					cr->fill_preserve();
-  					cr->restore();  // back to opaque black
-  					cr->stroke();
-					break;
-				}
+  				cr->save();
+  				cr->arc(j * 20 + 10, i * 20 + 10, 100 / 4.0, 0.0, 2.0 * M_PI); // full circle
+  				cr->set_source_rgba(0.0, 0.0, 0.8, 0.6);    // partially translucent
+  				cr->fill_preserve();
+  				cr->restore();  // back to opaque black
+  				cr->stroke();
 			}
 		}
 	}
@@ -90,18 +59,9 @@ bool Area::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
 	{
 		for (int j = 0; j < 45; j++)
 		{
-			if (fish[i][j] != 0)
+			if ((*map)[i][j] != 0)
 			{
-				switch (fish[i][j])
-				{
-				case 1:
-					cr->set_source_rgb(0.0, 1.0, 0.0);
-					break;
-				default:
-
-					cr->set_source_rgb(((float) fish[i][j] / 100), 0, 0);
-					break;
-				}
+				(*map)[i][j]->setColor(cr);
 				cr->rectangle(j * 20, i * 20, 20, 20);
 				cr->fill();
 			}
@@ -110,7 +70,7 @@ bool Area::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
 	return true;
 }
 
-bool Area::on_timeout()
+bool Area::trigger_redraw()
 {
 	// force our program to redraw the entire clock.
 	auto win = get_window();

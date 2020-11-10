@@ -38,4 +38,15 @@ endif ()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-add_executable(a.out ${GUI_OPTION} src/area.cc main.cpp)
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+add_executable(
+  a.out ${GUI_OPTION} 
+  src/area/area.cc 
+  src/initializer/initializer.cc 
+  src/tile/tile.cc 
+  src/tile/food/food.cc 
+  src/tile/fish/fish.cc 
+  main.cpp
+  )
+target_link_libraries(a.out PRIVATE Threads::Threads)
