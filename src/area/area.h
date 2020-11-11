@@ -3,20 +3,19 @@
 
 #include <gtkmm/drawingarea.h>
 #include "../tile/tile.h"
-
+#include <mutex>
 class Area : public Gtk::DrawingArea
 {
 public:
-  Area(Tile* (*mapinit)[45][45]);
+  Area(Tile* (*mapinit)[MAP_SIZE_W][MAP_SIZE_H], std::mutex* mtx);
   virtual ~Area();
   bool trigger_redraw();
 
 protected:
   //Override default signal handler:
   bool on_draw(const Cairo::RefPtr<Cairo::Context>& cr) override;
-  Tile* (*map)[45][45];
-  double m_radius;
-  double m_line_width;
+  Tile* (*map)[MAP_SIZE_W][MAP_SIZE_H];
+  std::mutex* mtx;
 
 };
 

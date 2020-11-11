@@ -5,14 +5,17 @@
 #include <cstdlib>
 #include <iostream>
 #include "area.h"
+#include "../tile/fish/fish.h"
+#include "../utils.h"
+#include <mutex>
 
 using namespace std;
 
-Area::Area(Tile* (*mapInit)[45][45])
-	: m_radius(0.42), m_line_width(0.05)
+Area::Area(Tile *(*mapInit)[MAP_SIZE_W][MAP_SIZE_H], mutex *mtx)
 {
+	this->mtx = mtx;
 	map = mapInit;
-	//Glib::signal_timeout().connect( sigc::mem_fun(*this, &Area::on_timeout), 1000 );
+	Glib::signal_timeout().connect(sigc::mem_fun(*this, &Area::trigger_redraw), REFRESH_TIME);
 }
 
 Area::~Area()
@@ -26,32 +29,31 @@ bool Area::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
 	const int width = allocation.get_width();
 	const int height = allocation.get_height();
 	srand((unsigned)time(NULL));
-	// coordinates for the center of the window
-	int xc, yc;
-	xc = width / 2;
-	yc = height / 2;
-
-	for (int i = 0; i < 45; i++)
+	this->mtx->lock();
+	for (int i = 0; i < MAP_SIZE_W; i++)
 	{
-		for (int j = 0; j < 45; j++)
+		for (int j = 0; j < MAP_SIZE_H; j++)
 		{
 			cr->set_source_rgb(0.6, 0.8, 1.0);
-			cr->rectangle(j * 20, i * 20, 20, 20);
+			cr->rectangle(j * SIZE_CELL_W, i * SIZE_CELL_H, SIZE_CELL_W, SIZE_CELL_H);
 			cr->fill();
 		}
 	}
-	for (int i = 0; i < 45; i++)
+	for (int i = 0; i < MAP_SIZE_W; i++)
 	{
-		for (int j = 0; j < 45; j++)
+		for (int j = 0; j < MAP_SIZE_H; j++)
 		{
 			if ((*map)[i][j] != 0)
 			{
-  				cr->save();
-  				cr->arc(j * 20 + 10, i * 20 + 10, 100 / 4.0, 0.0, 2.0 * M_PI); // full circle
-  				cr->set_source_rgba(0.0, 0.0, 0.8, 0.6);    // partially translucent
-  				cr->fill_preserve();
-  				cr->restore();  // back to opaque black
-  				cr->stroke();
+				if (Fish *v = dynamic_cast<Fish *>((*map)[i][j]))
+				{
+					cr->save();
+					cr->arc(j * SIZE_CELL_W + (SIZE_CELL_W / 2), i * SIZE_CELL_H + (SIZE_CELL_H / 2), ((float) SIZE_CELL_H + (SIZE_CELL_H / 2)), 0.0, 2.0 * M_PI); // full circle
+					cr->set_source_rgba(0.0, 0.0, 0.8, 0.3);					   // partially translucent
+					cr->fill_preserve();
+					cr->restore(); // back to opaque black
+					cr->stroke();
+				}
 			}
 		}
 	}
@@ -62,11 +64,12 @@ bool Area::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
 			if ((*map)[i][j] != 0)
 			{
 				(*map)[i][j]->setColor(cr);
-				cr->rectangle(j * 20, i * 20, 20, 20);
+				cr->rectangle(j * SIZE_CELL_W, i * SIZE_CELL_H, SIZE_CELL_W, SIZE_CELL_H);
 				cr->fill();
 			}
 		}
-	} 
+	}
+	this->mtx->unlock();
 	return true;
 }
 
