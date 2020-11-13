@@ -12,15 +12,23 @@ using namespace std;
 
 bool stop = false;
 
+int CURR_FISH = 0;
+
 void f(Initializer *init, Area *c, mutex* mx)
 {
-   while (!stop)
+   int count = 0;
+   bool all_died = false;
+   while (!all_died && !stop)
    {
-      mx->lock();
-      init->updateMap();
-      mx->unlock();
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      all_died = init->updateMap(mx);
+      if(all_died == true){
+         cout << "Tutti morti";
+      }
+      std::this_thread::sleep_for(std::chrono::milliseconds(REFRESH_TIME));
+      count++;
    }
+   cout << "Numero di pesci : " << CURR_FISH << endl;
+   cout << "Numero di iterazioni : " << count << endl;
 }
 
 int main(int argc, char **argv)

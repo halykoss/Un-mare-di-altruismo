@@ -1,6 +1,8 @@
 #include "food.h"
 
-Food::Food(){}
+Food::Food(){
+    this->t = Tile::type::food;
+    }
 Food::~Food(){}
 
 void Food::setColor(const Cairo::RefPtr<Cairo::Context> &cr){

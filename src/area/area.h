@@ -4,6 +4,8 @@
 #include <gtkmm/drawingarea.h>
 #include "../tile/tile.h"
 #include <mutex>
+#include "../utils.h"
+
 class Area : public Gtk::DrawingArea
 {
 public:

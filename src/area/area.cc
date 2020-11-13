@@ -48,7 +48,7 @@ bool Area::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
 				if (Fish *v = dynamic_cast<Fish *>((*map)[i][j]))
 				{
 					cr->save();
-					cr->arc(j * SIZE_CELL_W + (SIZE_CELL_W / 2), i * SIZE_CELL_H + (SIZE_CELL_H / 2), ((float) SIZE_CELL_H + (SIZE_CELL_H / 2)), 0.0, 2.0 * M_PI); // full circle
+					cr->arc(j * SIZE_CELL_W + (SIZE_CELL_W / 2), i * SIZE_CELL_H + (SIZE_CELL_H / 2), ((float) SENSOR_RADIUS * SIZE_CELL_H + (SIZE_CELL_H / 2)), 0.0, 2.0 * M_PI); // full circle
 					cr->set_source_rgba(0.0, 0.0, 0.8, 0.3);					   // partially translucent
 					cr->fill_preserve();
 					cr->restore(); // back to opaque black
@@ -57,9 +57,9 @@ bool Area::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
 			}
 		}
 	}
-	for (int i = 0; i < 45; i++)
+	for (int i = 0; i < MAP_SIZE_W; i++)
 	{
-		for (int j = 0; j < 45; j++)
+		for (int j = 0; j < MAP_SIZE_H; j++)
 		{
 			if ((*map)[i][j] != 0)
 			{
