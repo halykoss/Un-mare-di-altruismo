@@ -12,6 +12,7 @@
 #include "../utils.h"
 
 using namespace std;
+// Rappresenta le iterazioni sulla mappa
 class Initializer 
 {
 public:
@@ -20,10 +21,15 @@ public:
   virtual ~Initializer();
 
 private:
+  // Mossa dei pesci
   void move_fish(int i, int j,int sign1, int sign2);
+
 protected:
+  // Mappa
   Tile* (*map)[MAP_SIZE_W][MAP_SIZE_H];
+  // Ultima mossa, per gestire lo spawn di nuovo cibo
   std::chrono::_V2::system_clock::time_point start;
+  // Lista dei pesci sul campo
   list <Fish *> list_of_fish;
 };
 

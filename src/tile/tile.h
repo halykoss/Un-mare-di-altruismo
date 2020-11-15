@@ -5,14 +5,16 @@
 class Tile 
 {
 public:
+  // Tipi di caselle
   enum class type {
     fish,
     food
   };
+  type t;
   Tile();
   virtual ~Tile();
+  // Funzione che colora le caselle
   void virtual setColor(const Cairo::RefPtr<Cairo::Context> &cr) {};
-  type t;
 };
 
 #endif

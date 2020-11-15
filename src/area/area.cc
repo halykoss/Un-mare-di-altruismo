@@ -11,8 +11,9 @@
 
 using namespace std;
 
-Area::Area(Tile *(*mapInit)[MAP_SIZE_W][MAP_SIZE_H], mutex *mtx)
+Area::Area(int fd, Tile *(*mapInit)[MAP_SIZE_W][MAP_SIZE_H], mutex *mtx)
 {
+	this->fd = fd;
 	this->mtx = mtx;
 	map = mapInit;
 	Glib::signal_timeout().connect(sigc::mem_fun(*this, &Area::trigger_redraw), REFRESH_TIME);
@@ -24,12 +25,16 @@ Area::~Area()
 
 bool Area::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
 {
-
+    // Ottengo le informazioni sulla finestra
 	Gtk::Allocation allocation = get_allocation();
 	const int width = allocation.get_width();
 	const int height = allocation.get_height();
 	srand((unsigned)time(NULL));
 	this->mtx->lock();
+    // Scrivo al software in Python il numero di pesci e di cibo
+    write(this->fd, &CURR_FISH, sizeof(CURR_FISH));
+    write(this->fd, &CURR_FOOD, sizeof(CURR_FOOD));
+    // Stampo il campo
 	for (int i = 0; i < MAP_SIZE_W; i++)
 	{
 		for (int j = 0; j < MAP_SIZE_H; j++)
@@ -39,6 +44,7 @@ bool Area::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
 			cr->fill();
 		}
 	}
+    // Mostro il raggio visivo dei pesci
 	for (int i = 0; i < MAP_SIZE_W; i++)
 	{
 		for (int j = 0; j < MAP_SIZE_H; j++)
@@ -48,15 +54,17 @@ bool Area::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
 				if (Fish *v = dynamic_cast<Fish *>((*map)[i][j]))
 				{
 					cr->save();
-					cr->arc(j * SIZE_CELL_W + (SIZE_CELL_W / 2), i * SIZE_CELL_H + (SIZE_CELL_H / 2), ((float) SENSOR_RADIUS * SIZE_CELL_H + (SIZE_CELL_H / 2)), 0.0, 2.0 * M_PI); // full circle
-					cr->set_source_rgba(0.0, 0.0, 0.8, 0.3);					   // partially translucent
+					cr->arc(j * SIZE_CELL_W + (SIZE_CELL_W / 2), i * SIZE_CELL_H + (SIZE_CELL_H / 2), ((float) SENSOR_RADIUS * SIZE_CELL_H + (SIZE_CELL_H / 2)), 0.0, 2.0 * M_PI); // circonferenza intera
+					cr->set_source_rgba(0.0, 0.0, 0.8, 0.3);					   // trasparenza
 					cr->fill_preserve();
-					cr->restore(); // back to opaque black
+					cr->restore(); // Ritorno al colore opaco
 					cr->stroke();
+					write(this->fd,&(v->kindness), sizeof(v->kindness));
 				}
 			}
 		}
 	}
+    // Stampo la cella con cibo/pesce
 	for (int i = 0; i < MAP_SIZE_W; i++)
 	{
 		for (int j = 0; j < MAP_SIZE_H; j++)
@@ -75,7 +83,7 @@ bool Area::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
 
 bool Area::trigger_redraw()
 {
-	// force our program to redraw the entire clock.
+	// forza il programma a disegnare di nuovo la mappa
 	auto win = get_window();
 	if (win)
 	{

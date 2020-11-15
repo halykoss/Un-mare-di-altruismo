@@ -8,5 +8,6 @@ Fish::Fish(int kindness){
 Fish::~Fish(){}
 
 void Fish::setColor (const Cairo::RefPtr<Cairo::Context> &cr){
+    // Imposto il colore
     cr->set_source_rgba(((float) this->kindness / 100), 0, 0,(float) this->life_bar);
 }
