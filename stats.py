@@ -14,7 +14,7 @@ ys2 = []
 # Iteratore delle epoche
 iter = 0
 
-
+print("sono italo")
 # Animazione dei grafici
 def animate(i, xs, ys, ys2, list_of_fish):
     global iter
