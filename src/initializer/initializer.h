@@ -30,8 +30,6 @@ private:
 protected:
     // Mappa
     Tile *(*map)[MAP_SIZE_W][MAP_SIZE_H];
-    // Ultima mossa, per gestire lo spawn di nuovo cibo
-    std::chrono::_V2::system_clock::time_point start;
     // Lista dei pesci sul campo
     list<Fish *> list_of_fish;
 };

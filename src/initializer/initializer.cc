@@ -66,11 +66,18 @@ void Initializer::shareFoodAction(int i, int j)
                     if (((*map)[i + k][j + h]) != NULL && ((*map)[i + k][j + h])->t == Tile::type::fish)
                     {
                         trov = true;
-                        cout << "Mangio con pesce vicino" << endl;
+                        Fish *f = (Fish *)((*map)[i][j]);
+                        Fish *f1 = (Fish *)((*map)[i + k][j + h]);
+                        f->shareFood(f1);
                     }
                 }
             }
         }
+    }
+    if (!trov)
+    {
+        Fish *f = (Fish *)((*map)[i][j]);
+        f->updateEnergy();
     }
 }
 
@@ -135,7 +142,6 @@ bool Initializer::checkFood(int i, int j, int *posx, int *posy)
 Initializer::Initializer(Tile *(*mapInit)[MAP_SIZE_W][MAP_SIZE_H])
 {
     this->map = mapInit;
-    start = std::chrono::system_clock::now();
     // Inserisco i pesci nella mappa
     for (int i = 0; i < NUN_OF_FISH; i++)
     {
@@ -171,20 +177,13 @@ bool Initializer::updateMap(mutex *mx)
 {
     srand(time(NULL));
     mx->lock();
-    auto end = std::chrono::system_clock::now();
-    std::chrono::duration<double> elapsed_seconds = end - this->start;
-    // Inserisco nuovo cibo sulla mappa
-    if (elapsed_seconds.count() > SPAWN_TIME)
+    for (int i = 0; i < NUM_OF_FOOD_PER_SPAWN; i++)
     {
-        for (int i = 0; i < (elapsed_seconds.count() / SPAWN_TIME ? elapsed_seconds.count() / SPAWN_TIME : 1) * NUM_OF_FOOD_PER_SPAWN; i++)
+        int r1 = rand() % MAP_SIZE_W, r2 = rand() % MAP_SIZE_H;
+        if ((*map)[r1][r2] == nullptr)
         {
-            int r1 = rand() % MAP_SIZE_W, r2 = rand() % MAP_SIZE_H;
-            if ((*map)[r1][r2] == nullptr)
-            {
-                (*map)[r1][r2] = new Food;
-                CURR_FOOD++;
-            }
-            this->start = end;
+            (*map)[r1][r2] = new Food;
+            CURR_FOOD++;
         }
     }
     // Scorro la mappa
@@ -219,8 +218,9 @@ bool Initializer::updateMap(mutex *mx)
                         shareFoodAction(i, j);
                         (*map)[i + posx][j + posy] = (*map)[i][j];
                         (*map)[i][j] = nullptr;
-                        v->life_bar = 1;
-                        v->life_bar -= DECAY_TIME;
+                        cout << "Cibo condiviso" << endl;
+                        //v->life_bar = 1;
+                        //v->life_bar -= DECAY_TIME;
                         CURR_FOOD--;
                     }
                     // Se la casella è vuota, il pesce si muove
