@@ -1,10 +1,11 @@
 #include "fish.h"
 #include "../tile.h"
 #include "math.h"
-
+#include <iostream>
 // ho fatto in modo che l'energia non scenda sotto zero, quando diventa zero il pesce deve morire 
 // IDEA: rimuovere a fine turno i pesci con energia zero
 
+using namespace std;
 
 Fish::Fish(int kindness, double mass, int speed){
     this->t = Tile::type::fish;
@@ -21,8 +22,8 @@ void Fish::setColor (const Cairo::RefPtr<Cairo::Context> &cr){
 }
 
 void Fish::shareFood (Fish *f1) {    // ATTENZIONE NON CANCELLA IL CIBO DALLA MAPPA (ma è da fare)
-	double enFood = 0.33; //provvisorio
-	double enGain = enFood/2*(f1->life_bar/(f1->life_bar + this->life_bar) + f1->kindness/(f1->kindness + this->kindness));
+    cout << "Energia pesce 1 : " << this->life_bar << " Energia pesce 2 : " << f1->life_bar << endl; 
+	double enGain = enFood/2*(f1->life_bar/(f1->life_bar + this->life_bar) + ((double)f1->kindness / 100)/(f1->kindness + this->kindness));
 	this->life_bar += enGain;
 	f1->life_bar += (enFood - enGain);
 	if (this->life_bar>1) {			//CONTROLLA CHE L'ENERGIA DEL PESCE NON SUPERI 1
@@ -31,6 +32,16 @@ void Fish::shareFood (Fish *f1) {    // ATTENZIONE NON CANCELLA IL CIBO DALLA MA
 	if (f1->life_bar>1) {
 		f1->life_bar = 1;
 	}
+    cout << "Energia pesce 1 : " << this->life_bar << " Energia pesce 2 : " << f1->life_bar << endl; 
+}
+
+void Fish::updateEnergy(){
+    cout << "Energia pesce 1 : " << this->life_bar << endl; 
+    this->life_bar += this->enFood;
+	if (this->life_bar>1) {			//CONTROLLA CHE L'ENERGIA DEL PESCE NON SUPERI 1
+		this->life_bar = 1;
+	}
+    cout << "Energia pesce 1 : " << this->life_bar << endl; 
 }
 
 void Fish::fightFood (Fish *f1) {
