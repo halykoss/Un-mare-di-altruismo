@@ -14,7 +14,7 @@ using namespace std;
 
 void Initializer::move_fish(int i, int j, int sign1, int sign2)
 {
-    // Genero a caso la direzione da cui il pesce guarda il campo 
+    // Genero a caso la direzione da cui il pesce guarda il campo
     // Cerco una casella libera, muovo il pesce, aggiorno il costo della mossa
     // Se è rimasto senza vita il pesce muore
     bool moved = false;
@@ -35,6 +35,16 @@ void Initializer::move_fish(int i, int j, int sign1, int sign2)
                     CURR_FISH--;
                 }
                 moved = true;
+            }
+            else if (i + k < MAP_SIZE_W && i + k >= 0 && j + h < MAP_SIZE_H && j + h >= 0 && ((*map)[i + k][j + h])->t == Tile::type::food)
+            {
+                moved = true;
+                (*map)[i + k][j + h] = (*map)[i][j];
+                (*map)[i][j] = nullptr;
+                Fish *v = dynamic_cast<Fish *>((*map)[i + k][j + h]);
+                v->life_bar = 1;
+                v->life_bar -= DECAY_TIME;
+                CURR_FOOD--;
             }
         }
     }
@@ -77,6 +87,7 @@ Initializer::Initializer(Tile *(*mapInit)[MAP_SIZE_W][MAP_SIZE_H])
 
 bool Initializer::updateMap(mutex *mx)
 {
+    srand(time(NULL));
     mx->lock();
     auto end = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end - this->start;
@@ -94,7 +105,7 @@ bool Initializer::updateMap(mutex *mx)
             this->start = end;
         }
     }
-    // Scorro la mappa   
+    // Scorro la mappa
     int count = rand();
     for (int i = 0; i < MAP_SIZE_W; i++)
     {
@@ -113,7 +124,7 @@ bool Initializer::updateMap(mutex *mx)
                 int posx = 0;
                 int sign1 = rand() % 2;
                 int sign2 = rand() % 2;
-                // Guardo il raggio visivo e cerco di muovermi 
+                // Guardo il raggio visivo e cerco di muovermi
                 for (int z = 1; z <= SENSOR_RADIUS; z++)
                 {
                     for (int k = (sign1 ? -1 : 1) * z; (((sign1 ? 1 : -1) * k) <= z) && !trov; (sign1 ? k++ : k--))
