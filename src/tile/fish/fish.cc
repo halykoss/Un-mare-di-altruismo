@@ -7,11 +7,13 @@
 
 using namespace std;
 
-Fish::Fish(int kindness, double mass, int speed){
+Fish::Fish(int kindness, int speed){
     this->t = Tile::type::fish;
     this->kindness = kindness;
     this->mass = mass;
     this->speed = speed;
+    this->triggerEnergy = (float)100 * rand() / RAND_MAX;
+    this->life_time = ((float) rand() / RAND_MAX) * 100;
 }
 
 Fish::~Fish(){}
@@ -21,8 +23,11 @@ void Fish::setColor (const Cairo::RefPtr<Cairo::Context> &cr){
     cr->set_source_rgba(((float) this->kindness / 100), 0, 0,(float) this->life_bar);
 }
 
+Fish* Fish::procreate(Fish* f1){
+    return new Fish(this->kindness,f1->speed);
+}
+
 void Fish::shareFood (Fish *f1) {    // ATTENZIONE NON CANCELLA IL CIBO DALLA MAPPA (ma è da fare)
-    cout << "Energia pesce 1 : " << this->life_bar << " Energia pesce 2 : " << f1->life_bar << endl; 
 	double enGain = enFood/2*(f1->life_bar/(f1->life_bar + this->life_bar) + ((double)f1->kindness / 100)/(f1->kindness + this->kindness));
 	this->life_bar += enGain;
 	f1->life_bar += (enFood - enGain);
@@ -32,16 +37,13 @@ void Fish::shareFood (Fish *f1) {    // ATTENZIONE NON CANCELLA IL CIBO DALLA MA
 	if (f1->life_bar>1) {
 		f1->life_bar = 1;
 	}
-    cout << "Energia pesce 1 : " << this->life_bar << " Energia pesce 2 : " << f1->life_bar << endl; 
 }
 
 void Fish::updateEnergy(){
-    cout << "Energia pesce 1 : " << this->life_bar << endl; 
     this->life_bar += this->enFood;
 	if (this->life_bar>1) {			//CONTROLLA CHE L'ENERGIA DEL PESCE NON SUPERI 1
 		this->life_bar = 1;
 	}
-    cout << "Energia pesce 1 : " << this->life_bar << endl; 
 }
 
 void Fish::fightFood (Fish *f1) {

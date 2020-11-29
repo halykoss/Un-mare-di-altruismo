@@ -8,8 +8,8 @@
     const int NUM_OF_FOOD_PER_SPAWN = 5;
     const int SENSOR_RADIUS = 2;
     const int REFRESH_TIME = 100;
-    const int WINDOW_SIZE_W = 900;
-    const int WINDOW_SIZE_H = 900;
+    const int WINDOW_SIZE_W = 405;
+    const int WINDOW_SIZE_H = 405;
     extern int CURR_FISH;
     extern int CURR_FOOD;
     const double DECAY_TIME = 0.01;

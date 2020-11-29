@@ -26,7 +26,7 @@ private:
     void shareFoodAction(int i, int j);
     bool can_move_again();
     bool checkFood(int i, int j, int *posx, int *posy);
-
+    Fish* procreate(Fish* v,int i, int j);
 protected:
     // Mappa
     Tile *(*map)[MAP_SIZE_W][MAP_SIZE_H];

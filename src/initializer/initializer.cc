@@ -173,6 +173,38 @@ Initializer::Initializer(Tile *(*mapInit)[MAP_SIZE_W][MAP_SIZE_H])
     }
 }
 
+Fish* Initializer::procreate(Fish *v, int i, int j)
+{
+    if (v->life_bar >= v->triggerEnergy)
+    {
+        int sign1 = rand() % 2;
+        int sign2 = rand() % 2;
+        bool trov = false;
+        for (int z = 1; z <= SENSOR_RADIUS; z++)
+        {
+            for (int k = (sign1 ? -1 : 1) * z; (((sign1 ? 1 : -1) * k) <= z) && !trov; (sign1 ? k++ : k--))
+            {
+                for (int h = (sign2 ? 1 : -1) * z; (((sign2 ? 1 : -1) * h) <= z) && !trov; (sign2 ? h++ : h--))
+                {
+                    if (i + k < MAP_SIZE_W && i + k >= 0 && j + h < MAP_SIZE_H && j + h >= 0)
+                    {
+                        if (((*map)[i + k][j + h]) != NULL && ((*map)[i + k][j + h])->t == Tile::type::fish)
+                        {
+                            Fish *f1 = (Fish *)((*map)[i + k][j + h]);
+                            if (f1->life_bar >= f1->triggerEnergy)
+                            {
+                                trov = true;
+                                return v->procreate(f1);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return nullptr;
+}
+
 bool Initializer::updateMap(mutex *mx)
 {
     srand(time(NULL));
@@ -200,6 +232,13 @@ bool Initializer::updateMap(mutex *mx)
                 {
                     continue;
                 }
+                
+                if(v->life_time <= v->curr_life){
+                    (*map)[i][j] = nullptr;
+                    CURR_FISH--;
+                    continue;
+                }
+
                 int posy = 0;
                 int posx = 0;
                 // Guardo il raggio visivo e cerco di muovermi
@@ -218,9 +257,9 @@ bool Initializer::updateMap(mutex *mx)
                         shareFoodAction(i, j);
                         (*map)[i + posx][j + posy] = (*map)[i][j];
                         (*map)[i][j] = nullptr;
-                        cout << "Cibo condiviso" << endl;
+                        //cout << "Cibo condiviso" << endl;
                         //v->life_bar = 1;
-                        //v->life_bar -= DECAY_TIME;
+                        v->life_bar -= DECAY_TIME;
                         CURR_FOOD--;
                     }
                     // Se la casella è vuota, il pesce si muove
@@ -244,6 +283,7 @@ bool Initializer::updateMap(mutex *mx)
                     }
                 }
                 v->moved = 1;
+                v->curr_life += 1;
             }
         }
     }
