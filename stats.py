@@ -17,15 +17,19 @@ ys2 = []
 iter = 0
 # Animazione dei grafici
 
+stop = False
+
 
 def animate(i, xs, ys, ys2, list_of_fish):
     global iter
+    global stop
     # Leggo numero di pesci e di cibo dall'IPC
     curr_fish = sys.stdin.buffer.read(4)
     curr_food = sys.stdin.buffer.read(4)
     # Se il buffer viene chiuso allora fine programma
     if curr_fish == b'':
-        exit(0)
+        stop = True
+        return
         # Converto da bytes a interi e salvo
     curr_fish = int.from_bytes(curr_fish, "little")
     curr_food = int.from_bytes(curr_food, "little")
@@ -84,8 +88,10 @@ move_figure(fig, 950, 200)
 
 
 def signal_handler(sig, frame):
-    print("Chiusura programma")
-    sys.exit()
+    while not stop:
+        animate(0, xs, ys, ys2, [])
+    plt.savefig('final_image.png')
+    exit(0)
 
 
 signal.signal(signal.SIGALRM, signal_handler)

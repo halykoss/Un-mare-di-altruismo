@@ -58,6 +58,7 @@ int main(int argc, char **argv)
    th1.join();
    close(p[1]);
    kill(pid, SIGALRM);
+   wait(NULL);
    return res;
 }
 
