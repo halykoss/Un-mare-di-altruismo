@@ -12,7 +12,12 @@ Fish::Fish(int kindness, int speed){
     this->kindness = kindness;
     this->mass = mass;
     this->speed = speed;
-    this->triggerEnergy = (float)100 * rand() / RAND_MAX;
+    this->life_bar = (float) rand() / RAND_MAX;
+    this->triggerEnergy = (float) rand() / RAND_MAX;
+
+    if(this->triggerEnergy < 0.5){
+        this->triggerEnergy = 0.5;
+    }
     this->life_time = ((float) rand() / RAND_MAX) * 100;
 }
 
@@ -24,6 +29,8 @@ void Fish::setColor (const Cairo::RefPtr<Cairo::Context> &cr){
 }
 
 Fish* Fish::procreate(Fish* f1){
+    this->life_bar -= enFood;
+    f1->life_bar -= enFood;
     return new Fish(this->kindness,f1->speed);
 }
 
@@ -104,6 +111,10 @@ void Fish::movementEnergy (int steps) {
 	if (this->life_bar<0) {
 		this->life_bar = 0;
 	}
+}
+
+void Fish::eat(){
+    this->life_bar += enFood;
 }
 
 

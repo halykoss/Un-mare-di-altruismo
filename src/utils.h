@@ -13,6 +13,7 @@
     extern int CURR_FISH;
     extern int CURR_FOOD;
     const double DECAY_TIME = 0.01;
+    const double MAX_RAND_VALUE = 100.0;
     const int SIZE_CELL_W = WINDOW_SIZE_W / MAP_SIZE_W;
     const int SIZE_CELL_H = WINDOW_SIZE_H / MAP_SIZE_H;
 #endif

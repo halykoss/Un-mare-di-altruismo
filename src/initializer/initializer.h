@@ -7,6 +7,7 @@
 #include <list>
 #include <chrono>
 #include <mutex>
+#include <random>
 #include <ctime>
 #include "../tile/fish/fish.h"
 #include "../utils.h"
@@ -27,6 +28,10 @@ private:
     bool can_move_again();
     bool checkFood(int i, int j, int *posx, int *posy);
     Fish* procreate(Fish* v,int i, int j);
+    void locate(Fish* n,int i, int j);
+    std::random_device rd;
+    std::mt19937 mt = std::mt19937(rd());
+    std::uniform_int_distribution<> dist = std::uniform_int_distribution<>(0,100);
 protected:
     // Mappa
     Tile *(*map)[MAP_SIZE_W][MAP_SIZE_H];

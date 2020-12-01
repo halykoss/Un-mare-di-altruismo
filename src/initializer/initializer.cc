@@ -6,6 +6,7 @@
 #include <iostream>
 #include <chrono>
 #include <list>
+#include <random>
 #include <iterator>
 #include <mutex>
 #include <ctime>
@@ -42,7 +43,7 @@ void Initializer::move_fish(int i, int j, int sign1, int sign2)
                 (*map)[i + k][j + h] = (*map)[i][j];
                 (*map)[i][j] = nullptr;
                 Fish *v = dynamic_cast<Fish *>((*map)[i + k][j + h]);
-                v->life_bar = 1;
+                v->eat();
                 v->life_bar -= DECAY_TIME;
                 CURR_FOOD--;
             }
@@ -52,8 +53,8 @@ void Initializer::move_fish(int i, int j, int sign1, int sign2)
 
 void Initializer::shareFoodAction(int i, int j)
 {
-    int sign1 = rand() % 2;
-    int sign2 = rand() % 2;
+    int sign1 = dist(mt);
+    int sign2 = dist(mt);
     bool trov = false;
     for (int z = 1; z <= SENSOR_RADIUS; z++)
     {
@@ -102,8 +103,8 @@ bool Initializer::can_move_again()
 bool Initializer::checkFood(int i, int j, int *posx, int *posy)
 {
     bool trov = false;
-    int sign1 = rand() % 2;
-    int sign2 = rand() % 2;
+    int sign1 = dist(mt) % 2;
+    int sign2 = dist(mt) % 2;
     for (int z = 1; z <= SENSOR_RADIUS; z++)
     {
         for (int k = (sign1 ? -1 : 1) * z; (((sign1 ? 1 : -1) * k) <= z) && !trov; (sign1 ? k++ : k--))
@@ -145,10 +146,10 @@ Initializer::Initializer(Tile *(*mapInit)[MAP_SIZE_W][MAP_SIZE_H])
     // Inserisco i pesci nella mappa
     for (int i = 0; i < NUN_OF_FISH; i++)
     {
-        int r1 = rand() % MAP_SIZE_W, r2 = rand() % MAP_SIZE_H;
+        int r1 = dist(mt) % MAP_SIZE_W, r2 = dist(mt) % MAP_SIZE_H;
         if ((*map)[r1][r2] == nullptr)
         {
-            (*map)[r1][r2] = new Fish{(int)((float)100 * rand() / RAND_MAX)};
+            (*map)[r1][r2] = new Fish{(int)((float)100 * dist(mt) / MAX_RAND_VALUE)};
             list_of_fish.push_front(dynamic_cast<Fish *>((*map)[r1][r2]));
             CURR_FISH++;
         }
@@ -160,7 +161,7 @@ Initializer::Initializer(Tile *(*mapInit)[MAP_SIZE_W][MAP_SIZE_H])
     // Inserisco il cibo sulla mappa
     for (int i = 0; i < NUM_OF_FOOD; i++)
     {
-        int r1 = rand() % MAP_SIZE_W, r2 = rand() % MAP_SIZE_H;
+        int r1 = dist(mt) % MAP_SIZE_W, r2 = dist(mt) % MAP_SIZE_H;
         if ((*map)[r1][r2] == nullptr)
         {
             (*map)[r1][r2] = new Food;
@@ -173,12 +174,12 @@ Initializer::Initializer(Tile *(*mapInit)[MAP_SIZE_W][MAP_SIZE_H])
     }
 }
 
-Fish* Initializer::procreate(Fish *v, int i, int j)
+Fish *Initializer::procreate(Fish *v, int i, int j)
 {
     if (v->life_bar >= v->triggerEnergy)
     {
-        int sign1 = rand() % 2;
-        int sign2 = rand() % 2;
+        int sign1 = dist(mt) % 2;
+        int sign2 = dist(mt) % 2;
         bool trov = false;
         for (int z = 1; z <= SENSOR_RADIUS; z++)
         {
@@ -205,13 +206,34 @@ Fish* Initializer::procreate(Fish *v, int i, int j)
     return nullptr;
 }
 
+void Initializer::locate(Fish *n, int i, int j)
+{
+    for (int z = 1; z <= 3; z++)
+    {
+        for (int k = -1 * z; k < z; k++)
+        {
+            for (int h = z; h > (-1 * z); h--)
+            {
+                if (i + k < MAP_SIZE_W && i + k >= 0 && j + h < MAP_SIZE_H && j + h >= 0)
+                {
+                    if (((*map)[i + k][j + h]) == NULL)
+                    {
+                        (*map)[i + k][j + h] = n;
+                        CURR_FISH++;
+                        return;
+                    }
+                }
+            }
+        }
+    }
+}
+
 bool Initializer::updateMap(mutex *mx)
 {
-    srand(time(NULL));
     mx->lock();
     for (int i = 0; i < NUM_OF_FOOD_PER_SPAWN; i++)
     {
-        int r1 = rand() % MAP_SIZE_W, r2 = rand() % MAP_SIZE_H;
+        int r1 = dist(mt) % MAP_SIZE_W, r2 = dist(mt) % MAP_SIZE_H;
         if ((*map)[r1][r2] == nullptr)
         {
             (*map)[r1][r2] = new Food;
@@ -219,7 +241,7 @@ bool Initializer::updateMap(mutex *mx)
         }
     }
     // Scorro la mappa
-    int count = rand();
+    int count = dist(mt);
     for (int i = 0; i < MAP_SIZE_W; i++)
     {
         for (int j = 0; j < MAP_SIZE_H; j++)
@@ -232,8 +254,9 @@ bool Initializer::updateMap(mutex *mx)
                 {
                     continue;
                 }
-                
-                if(v->life_time <= v->curr_life){
+
+                if (v->life_time <= v->curr_life)
+                {
                     (*map)[i][j] = nullptr;
                     CURR_FISH--;
                     continue;
@@ -246,7 +269,7 @@ bool Initializer::updateMap(mutex *mx)
                 // Se non ha trovato del cibo si muove in un posto libero
                 if (!trov)
                 {
-                    move_fish(i, j, rand() % 2, rand() % 2);
+                    move_fish(i, j, dist(mt) % 2, dist(mt) % 2);
                 }
                 else
                 {
@@ -258,7 +281,6 @@ bool Initializer::updateMap(mutex *mx)
                         (*map)[i + posx][j + posy] = (*map)[i][j];
                         (*map)[i][j] = nullptr;
                         //cout << "Cibo condiviso" << endl;
-                        //v->life_bar = 1;
                         v->life_bar -= DECAY_TIME;
                         CURR_FOOD--;
                     }
@@ -279,8 +301,13 @@ bool Initializer::updateMap(mutex *mx)
                     // Se trova occupato, il pesce si muove in una casella vuota
                     else
                     {
-                        move_fish(i, j, rand() % 2, rand() % 2);
+                        move_fish(i, j, dist(mt) % 2, dist(mt) % 2);
                     }
+                }
+                Fish *child = procreate(v, i, j);
+                if (child != NULL)
+                {
+                    locate(child, i, j);
                 }
                 v->moved = 1;
                 v->curr_life += 1;

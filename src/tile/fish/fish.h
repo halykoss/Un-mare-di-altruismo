@@ -16,6 +16,7 @@ public:
     // Energia spesa per muoversi
     void movementEnergy(int steps);
     void updateEnergy();
+    void eat();
     Fish* procreate(Fish* f1);
     // Vita del pesce
     double life_bar = 1.0;
@@ -28,7 +29,7 @@ public:
     // Velocità pesce (non deve essere minore di 1)
     int speed = 1;
     // double trigger energy
-    int triggerEnergy;
+    float triggerEnergy;
     float mass;
     // Durate della vita del pesce
     int life_time;
