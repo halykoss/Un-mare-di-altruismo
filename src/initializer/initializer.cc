@@ -78,7 +78,7 @@ void Initializer::shareFoodAction(int i, int j)
     if (!trov)
     {
         Fish *f = (Fish *)((*map)[i][j]);
-        f->updateEnergy();
+        f->eat();
     }
 }
 
