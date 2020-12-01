@@ -3,16 +3,15 @@
 #include "math.h"
 #include <iostream>
 // ho fatto in modo che l'energia non scenda sotto zero, quando diventa zero il pesce deve morire 
-// IDEA: rimuovere a fine turno i pesci con energia zero
 
 using namespace std;
 
-Fish::Fish(int kindness, int speed){
+Fish::Fish(int kindness, int speed, float triggerEnergy){
     this->t = Tile::type::fish;
     this->kindness = kindness;
     this->speed = speed;
     this->life_bar = (float) rand() / RAND_MAX;
-    this->triggerEnergy = 0.5 + (float) rand() / RAND_MAX / 2;
+    this->triggerEnergy = triggerEnergy;
     this->life_time = ((float) rand() / RAND_MAX) * 100;
 }
 
@@ -26,7 +25,48 @@ void Fish::setColor (const Cairo::RefPtr<Cairo::Context> &cr){
 Fish* Fish::procreate(Fish* f1){
     this->life_bar -= EN_REPR;
     f1->life_bar -= EN_REPR;
-    return new Fish(this->kindness,f1->speed);
+    
+    int kidkind;
+    int kidspeed;
+    float kidtrigger;
+    
+    if (rand() / RAND_MAX <= MUTATION) {		//possible mutazione
+    	kidkind = rand()%101;	
+    }
+    else {
+    	if (rand()%2) {					// scelta del genitore
+    		kidkind = this->kindness;
+    	}
+    	else {
+    		kidkind = f1->kindness;
+    	}
+    }
+    
+    if (rand() / RAND_MAX <= MUTATION) {
+    	kidspeed = 1 + rand()%10;			//è da scegliere il max della speed
+    }
+    else {
+    	if (rand()%2) {
+    		kidspeed = this->speed;
+    	}
+    	else {
+    		kidspeed = f1->speed;
+    	}
+    }
+
+    if (rand() / RAND_MAX <= MUTATION) {
+    	kidtrigger = 0.5 + (float) rand() / RAND_MAX / 2;		
+    }
+    else {
+    	if (rand()%2) {
+    		kidtrigger = this->triggerEnergy;
+    	}
+    	else {
+    		kidtrigger = f1->triggerEnergy;
+    	}
+    }
+    
+    return new Fish(kidkind, kidspeed, kidtrigger);
 }
 
 void Fish::shareFood (Fish *f1) {    // ATTENZIONE NON CANCELLA IL CIBO DALLA MAPPA (ma è da fare)

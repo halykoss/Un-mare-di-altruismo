@@ -6,13 +6,14 @@ const double FIGHT_LOSS = 1;		//coeff perdita energia in lotta
 const double EN_FOOD = 0.33;		//energia del cibo base
 const double EN_REPR = 0.40;        	//costo riproduzione
 const double BONUS_RATE = 0.20;		//probabilità di trovare un banco
+const double MUTATION = 0.10; 		//probabilità mutazione
 
 
 // Astrae un pesce
 class Fish : public Tile
 {
 public:
-    Fish(int kindness, int speed = 5); // messi settati implicitamente per non cambiare tutto il codice prima
+    Fish(int kindness, int speed = 5, float triggerEnergy = 0.7); // messi settati implicitamente per non cambiare tutto il codice prima
     virtual ~Fish();
     // Colore della casella
     void setColor(const Cairo::RefPtr<Cairo::Context> &cr) override;
