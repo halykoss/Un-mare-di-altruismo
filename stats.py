@@ -30,7 +30,7 @@ def animate(i, xs, ys, ys2, list_of_fish):
     if curr_fish == b'':
         stop = True
         return
-        # Converto da bytes a interi e salvo
+    # Converto da bytes a interi e salvo
     curr_fish = int.from_bytes(curr_fish, "little")
     curr_food = int.from_bytes(curr_food, "little")
     ys.append(curr_fish)
@@ -41,7 +41,11 @@ def animate(i, xs, ys, ys2, list_of_fish):
     # Lista contenente il grado di altruismo dei pesci e la riempio
     list_of_fish = []
     for _ in range(curr_fish):
-        list_of_fish.append(int.from_bytes(sys.stdin.buffer.read(4), "little"))
+        input = sys.stdin.buffer.read(4)
+        if curr_fish == b'':
+            stop = True
+            return
+        list_of_fish.append(int.from_bytes(input, "little"))
     # Limito a 1000 le epoche
     xs = xs[-1000:]
     ys = ys[-1000:]
