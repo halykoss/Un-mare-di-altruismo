@@ -36,11 +36,11 @@ int main(int argc, char **argv)
    win.set_title("Simulator");
    win.set_size_request(WINDOW_SIZE_W, WINDOW_SIZE_H);
 
-   // Assegno NULL alle caselle della mappa 
+   // Assegno NULL alle caselle della mappa
    Tile *map[MAP_SIZE_W][MAP_SIZE_H] = {nullptr};
    Initializer init(&map);
 
-   // Lancio lo script in python per le statistiche 
+   // Lancio lo script in python per le statistiche
    int fd = pipe_py();
 
    // Rendering della mappa
@@ -49,7 +49,7 @@ int main(int argc, char **argv)
    win.add(c);
    c.show();
 
-    // Lancio il thread per i calcoli
+   // Lancio il thread per i calcoli
    thread th1(f, &init, &c, &mtx);
    int res = app->run(win);
 
@@ -57,7 +57,7 @@ int main(int argc, char **argv)
    stop = true;
    th1.join();
    close(p[1]);
-   kill(pid, SIGKILL);
+   kill(pid, SIGALRM);
    return res;
 }
 
@@ -94,14 +94,14 @@ int pipe_py()
       cerr << "Impossibile lanciare processo" << endl;
       exit(1);
    }
-   // Figlio 
+   // Figlio
    if (pid == 0)
    {
       std::ostringstream oss;
       oss << REFRESH_TIME;
       close(p[1]);
       dup2(p[0], 0);
-      execlp(cmd.c_str(), cmd.c_str(), "stats.py",oss.str().c_str(), (char *)0);
+      execlp(cmd.c_str(), cmd.c_str(), "stats.py", oss.str().c_str(), (char *)0);
    }
    // Padre
    return p[1];

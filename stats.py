@@ -1,6 +1,8 @@
 import sys
 import datetime as dt
 import matplotlib
+import sys
+import signal
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 # Una figura con due sottografici
@@ -13,9 +15,9 @@ ys = []
 ys2 = []
 # Iteratore delle epoche
 iter = 0
-
-print("sono Filippo")
 # Animazione dei grafici
+
+
 def animate(i, xs, ys, ys2, list_of_fish):
     global iter
     # Leggo numero di pesci e di cibo dall'IPC
@@ -44,7 +46,7 @@ def animate(i, xs, ys, ys2, list_of_fish):
     # Disegno il grafico con cibo e pesci
     axs[0].clear()
     axs[0].plot(xs, ys2, label="Food", color="green")
-    axs[0].plot(xs, ys, label="Fish",color="maroon")
+    axs[0].plot(xs, ys, label="Fish", color="maroon")
     axs[0].set_title("Fish and Food over epochs")
     # Disegno il grafico con l'altruismo
     axs[1].clear()
@@ -53,7 +55,8 @@ def animate(i, xs, ys, ys2, list_of_fish):
                                 alpha=1, edgecolor='black')
     # Imposto colore delle barre
     for idx in range(num_of_bins):
-        patches[idx].set_fc('#%02x%02x%02x' % (int(((idx * (100/num_of_bins) / 100)) * 255), 0, 0))
+        patches[idx].set_fc('#%02x%02x%02x' % (
+            int(((idx * (100/num_of_bins) / 100)) * 255), 0, 0))
 
     axs[1].set_title("Altruism degree distribution")
 
@@ -78,4 +81,12 @@ ani = animation.FuncAnimation(
 plt.title("Prova")
 fig.canvas.set_window_title('Stats')
 move_figure(fig, 950, 200)
+
+
+def signal_handler(sig, frame):
+    print("Chiusura programma")
+    sys.exit()
+
+
+signal.signal(signal.SIGALRM, signal_handler)
 plt.show()
