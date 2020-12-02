@@ -51,7 +51,7 @@ void Initializer::move_fish(int i, int j, int sign1, int sign2)
     }
 }
 
-void Initializer::shareFoodAction(int i, int j)
+void Initializer::shareorFightFoodAction(int i, int j)
 {
     int sign1 = dist(mt);
     int sign2 = dist(mt);
@@ -69,7 +69,31 @@ void Initializer::shareFoodAction(int i, int j)
                         trov = true;
                         Fish *f = (Fish *)((*map)[i][j]);
                         Fish *f1 = (Fish *)((*map)[i + k][j + h]);
-                        f->shareFood(f1);
+                        if (f->kindness + f1->kindness >= 1.0)
+                        {
+                            f->shareFood(f1);
+                            CURR_FOOD--;
+                        }
+                        else
+                        {
+                            bool eat = f->fightFood(f1);
+                            if (eat)
+                            {
+                                CURR_FOOD--;
+                            }
+                        }
+
+                        if (f->life_bar <= 0.0)
+                        {
+                            CURR_FISH--;
+                            (*map)[i][j] = nullptr;
+                        }
+
+                        if (f1->life_bar <= 0.0)
+                        {
+                            CURR_FISH--;
+                            ((*map)[i + k][j + h]) = nullptr;
+                        }
                     }
                 }
             }
@@ -79,6 +103,7 @@ void Initializer::shareFoodAction(int i, int j)
     {
         Fish *f = (Fish *)((*map)[i][j]);
         f->eat();
+        CURR_FOOD--;
     }
 }
 
@@ -277,12 +302,10 @@ bool Initializer::updateMap(mutex *mx)
                     if (((*map)[i + posx][j + posy]) != NULL && ((*map)[i + posx][j + posy])->t == Tile::type::food)
                     {
                         // Guardo il raggio visivo e cerco un altro pesce
-                        shareFoodAction(i, j);
+                        shareorFightFoodAction(i, j);
                         (*map)[i + posx][j + posy] = (*map)[i][j];
                         (*map)[i][j] = nullptr;
-                        //cout << "Cibo condiviso" << endl;
                         v->life_bar -= DECAY_TIME;
-                        CURR_FOOD--;
                     }
                     // Se la casella è vuota, il pesce si muove
                     else if (((*map)[i + posx][j + posy]) == NULL)

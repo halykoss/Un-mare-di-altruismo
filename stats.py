@@ -58,10 +58,10 @@ def animate(i, xs, ys, ys2, list_of_fish):
     axs[0].set_title("Fish and Food over epochs")
     # Disegno il grafico con l'altruismo
     axs[1].clear()
-    num_of_bins = 20
-    _, _, patches = axs[1].hist(list_of_fish, bins=num_of_bins, facecolor='blue',
+    _, _, patches = axs[1].hist(list_of_fish, bins=range(0, 100, 5), facecolor='blue',
                                 alpha=1, edgecolor='black')
     # Imposto colore delle barre
+    num_of_bins = len(patches)
     for idx in range(num_of_bins):
         patches[idx].set_fc('#%02x%02x%02x' % (
             int(((idx * (100/num_of_bins) / 100)) * 255), 0, 0))
