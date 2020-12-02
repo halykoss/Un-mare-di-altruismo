@@ -3,9 +3,9 @@
 const int MAP_SIZE_W = 45;
 const int MAP_SIZE_H = 45;
 const int NUN_OF_FISH = 100;
-const int NUM_OF_FOOD = 100;
+const int NUM_OF_FOOD = 300;
 //const double SPAWN_TIME = 0.05;
-const int NUM_OF_FOOD_PER_SPAWN = 5;
+const int NUM_OF_FOOD_PER_SPAWN = 15;
 const int SENSOR_RADIUS = 2;
 const int REFRESH_TIME = 100;
 const int WINDOW_SIZE_W = 405;

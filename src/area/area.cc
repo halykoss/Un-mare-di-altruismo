@@ -113,6 +113,7 @@ void Area::f()
 		if (all_died == true)
 		{
 			cout << "Tutti morti";
+			this->notify();
 			break;
 		}
 		num_of_iteration++;

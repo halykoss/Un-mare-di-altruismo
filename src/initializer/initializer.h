@@ -25,7 +25,7 @@ public:
 
 private:
     // Mossa dei pesci
-    void move_fish(int i, int j, int sign1, int sign2);
+    void move_fish(int *x, int *y, int sign1, int sign2);
     void shareorFightFoodAction(int i, int j);
     bool can_move_again();
     bool checkFood(int i, int j, int *posx, int *posy);

@@ -13,8 +13,10 @@
 
 using namespace std;
 
-void Initializer::move_fish(int i, int j, int sign1, int sign2)
+void Initializer::move_fish(int *x, int *y, int sign1, int sign2)
 {
+    int i = *x;
+    int j = *y;
     // Genero a caso la direzione da cui il pesce guarda il campo
     // Cerco una casella libera, muovo il pesce, aggiorno il costo della mossa
     // Se è rimasto senza vita il pesce muore
@@ -35,6 +37,8 @@ void Initializer::move_fish(int i, int j, int sign1, int sign2)
                     (*map)[i + k][j + h] = nullptr;
                     CURR_FISH--;
                 }
+                *x = i + k;
+                *y = j + h;
                 moved = true;
             }
             else if (i + k < MAP_SIZE_W && i + k >= 0 && j + h < MAP_SIZE_H && j + h >= 0 && ((*map)[i + k][j + h])->t == Tile::type::food)
@@ -174,7 +178,7 @@ Initializer::Initializer(Tile *(*mapInit)[MAP_SIZE_W][MAP_SIZE_H])
         int r1 = dist(mt) % MAP_SIZE_W, r2 = dist(mt) % MAP_SIZE_H;
         if ((*map)[r1][r2] == nullptr)
         {
-            (*map)[r1][r2] = new Fish{(int)((float)100 * dist(mt) / MAX_RAND_VALUE)};
+            (*map)[r1][r2] = new Fish{(int)((float)100 * dist(mt) / MAX_RAND_VALUE), (dist(mt) % 5) + 1, ((float)(dist(mt) / MAX_RAND_VALUE))};
             list_of_fish.push_front(dynamic_cast<Fish *>((*map)[r1][r2]));
             CURR_FISH++;
         }
@@ -275,65 +279,98 @@ bool Initializer::updateMap(mutex *mx)
             if (((*map)[i][j]) != NULL && ((*map)[i][j])->t == Tile::type::fish)
             {
                 Fish *v = dynamic_cast<Fish *>((*map)[i][j]);
-                if (v->moved)
+                int steps = 0;
+                int swapx = i;
+                int swapy = j;
+                int speed = v->speed;
+                for (int steps = 0; steps <= speed; steps++)
                 {
-                    continue;
-                }
-
-                if (v->life_time <= v->curr_life)
-                {
-                    (*map)[i][j] = nullptr;
-                    CURR_FISH--;
-                    continue;
-                }
-
-                int posy = 0;
-                int posx = 0;
-                // Guardo il raggio visivo e cerco di muovermi
-                bool trov = checkFood(i, j, &posx, &posy);
-                // Se non ha trovato del cibo si muove in un posto libero
-                if (!trov)
-                {
-                    move_fish(i, j, dist(mt) % 2, dist(mt) % 2);
-                }
-                else
-                {
-                    // Se ha trovato il cibo, mangia
-                    if (((*map)[i + posx][j + posy]) != NULL && ((*map)[i + posx][j + posy])->t == Tile::type::food)
+                    v = dynamic_cast<Fish *>((*map)[i][j]);
+                    int posy = 0;
+                    int posx = 0;
+                    if (v == NULL)
                     {
-                        // Guardo il raggio visivo e cerco un altro pesce
-                        shareorFightFoodAction(i, j);
-                        (*map)[i + posx][j + posy] = (*map)[i][j];
-                        (*map)[i][j] = nullptr;
-                        v->life_bar -= DECAY_TIME;
+                        break;
                     }
-                    // Se la casella è vuota, il pesce si muove
-                    else if (((*map)[i + posx][j + posy]) == NULL)
+                    if (v->life_bar != v->life_bar)
                     {
-                        (*map)[i + posx][j + posy] = (*map)[i][j];
-                        (*map)[i][j] = nullptr;
-                        Fish *p = dynamic_cast<Fish *>((*map)[i + posx][j + posy]);
-                        p->life_bar -= DECAY_TIME;
-                        if (p->life_bar <= 0.0)
-                        {
-                            p->died = true;
-                            (*map)[i + posx][j + posy] = nullptr;
-                            CURR_FISH--;
-                        }
+                        (*map)[i][j] = NULL;
+                        CURR_FISH--;
+                        break;
                     }
-                    // Se trova occupato, il pesce si muove in una casella vuota
+                    if (v->moved)
+                    {
+                        break;
+                    }
+
+                    if (v->life_time <= v->curr_life)
+                    {
+                        (*map)[i][j] = nullptr;
+                        CURR_FISH--;
+                        break;
+                    }
+                    // Guardo il raggio visivo e cerco di muovermi
+                    bool trov = checkFood(i, j, &posx, &posy);
+                    // Se non ha trovato del cibo si muove in un posto libero
+                    if (!trov)
+                    {
+                        move_fish(&i, &j, dist(mt) % 2, dist(mt) % 2);
+                    }
                     else
                     {
-                        move_fish(i, j, dist(mt) % 2, dist(mt) % 2);
+                        // Se ha trovato il cibo, mangia
+                        if (((*map)[i + posx][j + posy]) != NULL && ((*map)[i + posx][j + posy])->t == Tile::type::food)
+                        {
+                            // Guardo il raggio visivo e cerco un altro pesce
+                            shareorFightFoodAction(i, j);
+                            (*map)[i + posx][j + posy] = (*map)[i][j];
+                            (*map)[i][j] = nullptr;
+                            //cout << "Cibo condiviso" << endl;
+                            v->life_bar -= DECAY_TIME;
+                            i = i + posx;
+                            j = j + posy;
+                            break;
+                        }
+                        // Se la casella è vuota, il pesce si muove
+                        else if (((*map)[i + posx][j + posy]) == NULL)
+                        {
+                            (*map)[i + posx][j + posy] = (*map)[i][j];
+                            (*map)[i][j] = nullptr;
+                            Fish *p = dynamic_cast<Fish *>((*map)[i + posx][j + posy]);
+                            p->life_bar -= DECAY_TIME;
+                            if (p->life_bar <= 0.0)
+                            {
+                                p->died = true;
+                                (*map)[i + posx][j + posy] = nullptr;
+                                CURR_FISH--;
+                                break;
+                            }
+                            i = i + posx;
+                            j = j + posy;
+                        }
+                        // Se trova occupato, il pesce si muove in una casella vuota
+                        else
+                        {
+                            move_fish(&i, &j, dist(mt) % 2, dist(mt) % 2);
+                        }
+                    }
+                    int count = 0;
+                    while (count++ < 3)
+                    {
+                        Fish *child = procreate(v, i, j);
+                        if (child != NULL)
+                        {
+                            locate(child, i, j);
+                        }
                     }
                 }
-                Fish *child = procreate(v, i, j);
-                if (child != NULL)
+                if (v != NULL)
                 {
-                    locate(child, i, j);
+                    v->moved = 1;
+                    v->curr_life += 1;
                 }
-                v->moved = 1;
-                v->curr_life += 1;
+                i = swapx;
+                j = swapy;
             }
         }
     }
