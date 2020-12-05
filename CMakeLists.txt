@@ -39,7 +39,16 @@ endif ()
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
+set(JSON_BuildTests OFF CACHE INTERNAL "")
 find_package(Threads REQUIRED)
+execute_process (
+    COMMAND bash -c "pip install .."
+    OUTPUT_VARIABLE outVar
+)
+
+add_subdirectory(${nlohmann_json_source}
+   src/json)
+
 add_executable(
   a.out ${GUI_OPTION} 
   src/area/area.cc 
@@ -47,6 +56,8 @@ add_executable(
   src/tile/tile.cc 
   src/tile/food/food.cc 
   src/tile/fish/fish.cc 
-  main.cpp
+  src/utils/utils.cc
+  src/main.cpp
   )
+target_link_libraries(a.out PRIVATE nlohmann_json::nlohmann_json)
 target_link_libraries(a.out PRIVATE Threads::Threads)

@@ -1,0 +1,54 @@
+{
+    "MAP_SIZE_W": {
+        "value": 45,
+        "display": false
+    },
+    "MAP_SIZE_H": {
+        "value": 45,
+        "display": false
+    },
+    "NUM_OF_FISH": {
+        "value": 100,
+        "type": "int",
+        "name": "Numero iniziale pesci",
+        "display": true
+    },
+    "NUM_OF_FOOD": {
+        "value": 230,
+        "type": "int",
+        "name": "Numero iniziale cibo",
+        "display": true
+    },
+    "NUM_OF_FOOD_PER_SPAWN": {
+        "value": 15,
+        "type": "int",
+        "name": "Spawn rate cibo",
+        "display": true
+    },
+    "SENSOR_RADIUS": {
+        "value": 2,
+        "display": false
+    },
+    "REFRESH_TIME": {
+        "value": 100,
+        "display": false
+    },
+    "WINDOW_SIZE_W": {
+        "value": 405,
+        "display": false
+    },
+    "WINDOW_SIZE_H": {
+        "value": 405,
+        "display": false
+    },
+    "DECAY_TIME": {
+        "value": 0.01,
+        "type": "float",
+        "name": "Energia per passo",
+        "display": true
+    },
+    "MAX_RAND_VALUE": {
+        "value": 100.0,
+        "display": false
+    }
+}

@@ -1,9 +1,9 @@
-#include "src/area/area.h"
-#include "src/initializer/initializer.h"
+#include "area/area.h"
+#include "initializer/initializer.h"
+#include "tile/tile.h"
+#include "utils/utils.h"
 #include <gtkmm/application.h>
 #include <gtkmm/window.h>
-#include "src/tile/tile.h"
-#include "src/utils.h"
 #include <iostream>
 #include <unistd.h>
 #include <stdio.h>
@@ -14,9 +14,9 @@
 #include <mutex>
 using namespace std;
 
-// Extern
 int CURR_FISH = 0;
 int CURR_FOOD = 0;
+// Extern
 
 // Per comunicazione con script python
 int p[2], pid;
@@ -29,6 +29,7 @@ int pipe_py();
 
 int main(int argc, char **argv)
 {
+   Utils::get_settings_from_json();
    auto app = Gtk::Application::create(argc, argv, "it.unibo.fsc");
    mutex mtx;
    Gtk::Window win;
@@ -83,7 +84,7 @@ int pipe_py()
       oss << REFRESH_TIME;
       close(p[1]);
       dup2(p[0], 0);
-      execlp(cmd.c_str(), cmd.c_str(), "stats.py", oss.str().c_str(), (char *)0);
+      execlp(cmd.c_str(), cmd.c_str(), "stats/stats.py", oss.str().c_str(), (char *)0);
    }
    // Padre
    return p[1];

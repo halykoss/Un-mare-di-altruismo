@@ -10,7 +10,7 @@
 #include <random>
 #include <ctime>
 #include "../tile/fish/fish.h"
-#include "../utils.h"
+#include "../utils/utils.h"
 
 using namespace std;
 // Rappresenta le iterazioni sulla mappa

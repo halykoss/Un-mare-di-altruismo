@@ -8,7 +8,7 @@
 #include <gtkmm.h>
 #include <thread>
 #include <unistd.h>
-#include "../utils.h"
+#include "../utils/utils.h"
 // Il disegno della mappa su cui
 // i pesci si muovono
 class Area : public Gtk::DrawingArea

@@ -3,11 +3,12 @@ myArray=( "$@" )
 DIR="bin"
 builder="-build"
 removecode="-clean"
+IMG="final_image.png"
 EXECUTABLE="a.out"
 
 # Se si vuole pulire l'albero
 if [[ " ${myArray[@]} " =~ " ${removecode} " ]]; then
-    rm -rf $DIR $EXECUTABLE
+    rm -rf $DIR $EXECUTABLE  $IMG
     exit 0
 fi
 # Se si vuole fare il build del progetto
@@ -20,7 +21,6 @@ cmake ..
 
 if [[ " ${myArray[@]} " =~ " ${builder} " ]]; then
     make
-    mv $EXECUTABLE ..
 fi
 
 

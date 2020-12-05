@@ -7,7 +7,7 @@
 #include "area.h"
 #include "../tile/fish/fish.h"
 #include "../initializer/initializer.h"
-#include "../utils.h"
+#include "../utils/utils.h"
 #include <mutex>
 #include <thread>
 #include <unistd.h>

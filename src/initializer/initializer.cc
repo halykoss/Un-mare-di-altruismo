@@ -2,7 +2,7 @@
 #include "../tile/tile.h"
 #include "../tile/food/food.h"
 #include "../tile/fish/fish.h"
-#include "../utils.h"
+#include "../utils/utils.h"
 #include <iostream>
 #include <chrono>
 #include <list>
@@ -30,7 +30,7 @@ void Initializer::move_fish(int *x, int *y, int sign1, int sign2)
                 (*map)[i + k][j + h] = (*map)[i][j];
                 (*map)[i][j] = nullptr;
                 Fish *p = dynamic_cast<Fish *>((*map)[i + k][j + h]);
-                p->life_bar -= DECAY_TIME;
+                p->life_bar -= Utils::DECAY_TIME;
                 if (p->life_bar <= 0.0)
                 {
                     p->died = true;
@@ -48,7 +48,7 @@ void Initializer::move_fish(int *x, int *y, int sign1, int sign2)
                 (*map)[i][j] = nullptr;
                 Fish *v = dynamic_cast<Fish *>((*map)[i + k][j + h]);
                 v->eat();
-                v->life_bar -= DECAY_TIME;
+                v->life_bar -= Utils::DECAY_TIME;
                 CURR_FOOD--;
             }
         }
@@ -173,7 +173,7 @@ Initializer::Initializer(Tile *(*mapInit)[MAP_SIZE_W][MAP_SIZE_H])
 {
     this->map = mapInit;
     // Inserisco i pesci nella mappa
-    for (int i = 0; i < NUN_OF_FISH; i++)
+    for (int i = 0; i < Utils::NUM_OF_FISH; i++)
     {
         int r1 = dist(mt) % MAP_SIZE_W, r2 = dist(mt) % MAP_SIZE_H;
         if ((*map)[r1][r2] == nullptr)
@@ -188,7 +188,7 @@ Initializer::Initializer(Tile *(*mapInit)[MAP_SIZE_W][MAP_SIZE_H])
         }
     }
     // Inserisco il cibo sulla mappa
-    for (int i = 0; i < NUM_OF_FOOD; i++)
+    for (int i = 0; i < Utils::NUM_OF_FOOD; i++)
     {
         int r1 = dist(mt) % MAP_SIZE_W, r2 = dist(mt) % MAP_SIZE_H;
         if ((*map)[r1][r2] == nullptr)
@@ -260,7 +260,7 @@ void Initializer::locate(Fish *n, int i, int j)
 bool Initializer::updateMap(mutex *mx)
 {
     mx->lock();
-    for (int i = 0; i < NUM_OF_FOOD_PER_SPAWN; i++)
+    for (int i = 0; i < Utils::NUM_OF_FOOD_PER_SPAWN; i++)
     {
         int r1 = dist(mt) % MAP_SIZE_W, r2 = dist(mt) % MAP_SIZE_H;
         if ((*map)[r1][r2] == nullptr)
@@ -326,7 +326,7 @@ bool Initializer::updateMap(mutex *mx)
                             (*map)[i + posx][j + posy] = (*map)[i][j];
                             (*map)[i][j] = nullptr;
                             //cout << "Cibo condiviso" << endl;
-                            v->life_bar -= DECAY_TIME;
+                            v->life_bar -= Utils::DECAY_TIME;
                             i = i + posx;
                             j = j + posy;
                             break;
@@ -337,7 +337,7 @@ bool Initializer::updateMap(mutex *mx)
                             (*map)[i + posx][j + posy] = (*map)[i][j];
                             (*map)[i][j] = nullptr;
                             Fish *p = dynamic_cast<Fish *>((*map)[i + posx][j + posy]);
-                            p->life_bar -= DECAY_TIME;
+                            p->life_bar -= Utils::DECAY_TIME;
                             if (p->life_bar <= 0.0)
                             {
                                 p->died = true;
