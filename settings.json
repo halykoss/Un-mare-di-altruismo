@@ -50,5 +50,35 @@
     "MAX_RAND_VALUE": {
         "value": 100.0,
         "display": false
+    },
+    "FIGHT_LOSS": {
+        "value": 1,
+        "type": "double",
+        "name": "Coeff energia per combattimento",
+        "display": true
+    },
+    "EN_FOOD": {
+        "value": 0.33,
+        "type": "double",
+        "name": "Energia cibo",
+        "display": true
+    },
+    "EN_REPR": {
+        "value": 0.4,
+        "type": "double",
+        "name": "Costo energia riproduzione",
+        "display": true
+    },
+    "BONUS_RATE": {
+        "value": 0.2,
+        "type": "double",
+        "name": "Percentuale banchi",
+        "display": true
+    },
+    "MUTATION": {
+        "value": 0.1,
+        "type": "double",
+        "name": "Probabilit\u00e0 mutazione",
+        "display": true
     }
 }

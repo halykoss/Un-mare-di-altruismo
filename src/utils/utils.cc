@@ -4,6 +4,11 @@ int Utils::NUM_OF_FOOD = 100;
 int Utils::NUM_OF_FISH = 300;
 int Utils::NUM_OF_FOOD_PER_SPAWN = 5;
 double Utils::DECAY_TIME = 0.01;
+double Utils::FIGHT_LOSS = 1;    
+double Utils::EN_FOOD = 0.33;    
+double Utils::EN_REPR = 0.40;    
+double Utils::BONUS_RATE = 0.20; 
+double Utils::MUTATION = 0.10;   
 
 void Utils::get_settings_from_json()
 {

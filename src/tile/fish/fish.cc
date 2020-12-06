@@ -26,14 +26,14 @@ void Fish::setColor(const Cairo::RefPtr<Cairo::Context> &cr)
 
 Fish *Fish::procreate(Fish *f1)
 {
-	this->life_bar -= EN_REPR;
-	f1->life_bar -= EN_REPR;
+	this->life_bar -= Utils::EN_REPR;
+	f1->life_bar -= Utils::EN_REPR;
 
 	int kidkind;
 	int kidspeed;
 	float kidtrigger;
 
-	if (rand() / RAND_MAX <= MUTATION)
+	if (rand() / RAND_MAX <= Utils::MUTATION)
 	{ //possible mutazione
 		kidkind = rand() % 101;
 	}
@@ -49,7 +49,7 @@ Fish *Fish::procreate(Fish *f1)
 		}
 	}
 
-	if (rand() / RAND_MAX <= MUTATION)
+	if (rand() / RAND_MAX <= Utils::MUTATION)
 	{
 		kidspeed = 1 + rand() % 10; //è da scegliere il max della speed
 	}
@@ -65,7 +65,7 @@ Fish *Fish::procreate(Fish *f1)
 		}
 	}
 
-	if (rand() / RAND_MAX <= MUTATION)
+	if (rand() / RAND_MAX <= Utils::MUTATION)
 	{
 		kidtrigger = 0.5 + (float)rand() / RAND_MAX / 2;
 	}
@@ -86,11 +86,11 @@ Fish *Fish::procreate(Fish *f1)
 
 void Fish::shareFood(Fish *f1)
 { // ATTENZIONE NON CANCELLA IL CIBO DALLA MAPPA (ma è da fare)
-	double food = EN_FOOD;
+	double food = Utils::EN_FOOD;
 
-	if ((this->kindness + f1->kindness) > 130 && (rand() / RAND_MAX) <= BONUS_RATE)
+	if ((this->kindness + f1->kindness) > 130 && (rand() / RAND_MAX) <= Utils::BONUS_RATE)
 	{ //il banco di pesci aumenta il cibo
-		food = EN_FOOD * (1 + 3 * rand() / RAND_MAX);
+		food = Utils::EN_FOOD * (1 + 3 * rand() / RAND_MAX);
 	}
 
 	double enGain = food / 2 * (f1->life_bar / (f1->life_bar + this->life_bar) + ((double)f1->kindness) / ((double)f1->kindness + (double)this->kindness));
@@ -111,10 +111,10 @@ bool Fish::fightFood(Fish *f1)
 	double probability = f1->life_bar / (this->life_bar + f1->life_bar);
 	double enLoss; //energia consumata per combattere (ognuno ne perde un valore diverso)
 
-	enLoss = FIGHT_LOSS * (f1->life_bar) / (f1->life_bar + this->life_bar);
+	enLoss = Utils::FIGHT_LOSS * (f1->life_bar) / (f1->life_bar + this->life_bar);
 
 	// controlliamo se sono morti per combattere prima di mangiare
-	f1->life_bar -= (FIGHT_LOSS - enLoss);
+	f1->life_bar -= (Utils::FIGHT_LOSS - enLoss);
 	if (f1->life_bar < 0)
 	{
 		f1->life_bar = 0;
@@ -131,12 +131,12 @@ bool Fish::fightFood(Fish *f1)
 	{
 		if (f1->life_bar > 0)
 		{
-			f1->life_bar += EN_FOOD;
+			f1->life_bar += Utils::EN_FOOD;
 			return true;
 		}
 		else if (this->life_bar > 0)
 		{
-			this->life_bar += EN_FOOD;
+			this->life_bar += Utils::EN_FOOD;
 			return true;
 		}
 	}
@@ -145,12 +145,12 @@ bool Fish::fightFood(Fish *f1)
 	{
 		if (this->life_bar > 0)
 		{
-			this->life_bar += EN_FOOD;
+			this->life_bar += Utils::EN_FOOD;
 			return true;
 		}
 		else if (f1->life_bar > 0)
 		{
-			f1->life_bar += EN_FOOD;
+			f1->life_bar += Utils::EN_FOOD;
 			return true;
 		}
 	}
@@ -159,7 +159,7 @@ bool Fish::fightFood(Fish *f1)
 
 void Fish::eat()
 {
-	this->life_bar += EN_FOOD;
+	this->life_bar += Utils::EN_FOOD;
 	if (this->life_bar > 1)
 	{ //CONTROLLA CHE L'ENERGIA DEL PESCE NON SUPERI 1
 		this->life_bar = 1;

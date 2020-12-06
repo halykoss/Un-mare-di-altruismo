@@ -1,12 +1,13 @@
 #ifndef FISH_H
 #define FISH_H
 #include "../tile.h"
+#include "../../utils/utils.h"
 
-const double FIGHT_LOSS = 1;    //coeff perdita energia in lotta
+/*const double FIGHT_LOSS = 1;    //coeff perdita energia in lotta
 const double EN_FOOD = 0.33;    //energia del cibo base
 const double EN_REPR = 0.40;    //costo riproduzione
 const double BONUS_RATE = 0.20; //probabilità di trovare un banco
-const double MUTATION = 0.10;   //probabilità mutazione
+const double MUTATION = 0.10; */  //probabilità mutazione
 
 // Astrae un pesce
 class Fish : public Tile
