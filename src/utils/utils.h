@@ -22,6 +22,11 @@ public:
     static int NUM_OF_FOOD_PER_SPAWN;
     static double DECAY_TIME;
     static void get_settings_from_json();
+    static double FIGHT_LOSS; //= 1;    //coeff perdita energia in lotta
+    static double EN_FOOD; //= 0.33;    //energia del cibo base
+    static double EN_REPR; //= 0.40;    //costo riproduzione
+    static double BONUS_RATE; //= 0.20; //probabilità di trovare un banco
+    static double MUTATION; //= 0.10;   //probabilità mutazione
     static int SIZE_CELL_W;
     static int SIZE_CELL_H;
     static int WINDOW_SIZE_W;

@@ -8,6 +8,11 @@ int Utils::WINDOW_SIZE_H = 1000;
 int Utils::SIZE_CELL_W = WINDOW_SIZE_W / MAP_SIZE_W;
 int Utils::SIZE_CELL_H = WINDOW_SIZE_H / MAP_SIZE_H;
 double Utils::DECAY_TIME = 0.01;
+double Utils::FIGHT_LOSS = 1;    
+double Utils::EN_FOOD = 0.33;    
+double Utils::EN_REPR = 0.40;    
+double Utils::BONUS_RATE = 0.20; 
+double Utils::MUTATION = 0.10;   
 
 void Utils::get_settings_from_json()
 {
