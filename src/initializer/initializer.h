@@ -17,11 +17,26 @@ using namespace std;
 class Initializer
 {
 public:
-    Initializer(Tile *(*map)[MAP_SIZE_W][MAP_SIZE_H]);
-    virtual bool updateMap(mutex *mx);
+    Initializer();
+    virtual bool updateMap();
     virtual ~Initializer();
-    int CURR_FISH;
-    int CURR_FOOD;
+    int CURR_FISH = 0;
+    int CURR_FOOD = 0;
+    int epoch = 0;
+    // Mappa
+    Tile *map[MAP_SIZE_W][MAP_SIZE_H];
+    struct state
+    {
+        int NUM_OF_FISH;
+        int CURR_FOOD;
+        int epoch;
+        string toString;
+        vector<int> kindness;
+        vector<int> speed;
+        vector<float> triggerEnergy;
+        vector<double> life_bar;
+    };
+    Initializer::state *getStringState(int idx, int idy);
 
 private:
     // Mossa dei pesci
@@ -36,8 +51,6 @@ private:
     std::uniform_int_distribution<> dist = std::uniform_int_distribution<>(0, 100);
 
 protected:
-    // Mappa
-    Tile *(*map)[MAP_SIZE_W][MAP_SIZE_H];
     // Lista dei pesci sul campo
     list<Fish *> list_of_fish;
 };

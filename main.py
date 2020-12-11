@@ -9,15 +9,15 @@ data = []
 def close(entries, root):
     global data
     for key, value in entries.items():
-        if(data[key]["type"] == "int"):
+        if data[key]["type"] == "int":
             data[key]["value"] = int(value.get())
-        if(data[key]["type"] == "float"):
+        if data[key]["type"] == "float":
             data[key]["value"] = float(value.get())
 
     with open("settings.json", "w") as output:
         output.write(json.dumps(data, indent=4))
 
-    proc = subprocess.Popen(["./bin/a.out"])
+    proc = subprocess.Popen(["./bin/a.out > values.csv"])
     root.withdraw()
     proc.wait()
 
@@ -28,7 +28,7 @@ def makeform(root):
     global data
     entries = {}
     for key, field in data.items():
-        if(field["display"]):
+        if field["display"]:
             row = tk.Frame(root)
             lab = tk.Label(row, width=22, text=field["name"]+": ", anchor='w')
             ent = tk.Entry(row)

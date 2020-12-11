@@ -1,4 +1,6 @@
 #include "tile.h"
 
-Tile::Tile(){}
+Tile::Tile(){
+    this->t = type::tile;
+}
 Tile::~Tile(){}

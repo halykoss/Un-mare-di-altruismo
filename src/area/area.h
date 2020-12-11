@@ -15,23 +15,22 @@ class Area : public Gtk::DrawingArea
 {
 
 public:
-  Area(int fd, Tile *(*mapinit)[MAP_SIZE_W][MAP_SIZE_H], std::mutex *mtx, Initializer *init);
+  Area(int fd);
   virtual ~Area();
   void trigger_redraw();
 
 protected:
   //Override il disegno di default
   bool on_draw(const Cairo::RefPtr<Cairo::Context> &cr) override;
-  // Mappa
-  Tile *(*map)[MAP_SIZE_W][MAP_SIZE_H];
   Glib::Dispatcher m_Dispatcher;
-  std::mutex *mtx;
+  std::mutex *mtx[3][3];
+  std::mutex fdMtx;
   // Descrittore del file di comunicazione
   // con Python
   int fd;
-  Initializer *init;
-  void f();
-  void send_out();
+  Initializer *init[3][3];
+  void f(int i, int j);
+  void send_out(int i, int j, Initializer::state *s);
   void notify();
   std::thread *m_WorkerThread;
 };

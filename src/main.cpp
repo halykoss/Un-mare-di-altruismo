@@ -1,21 +1,14 @@
 #include "area/area.h"
 #include "initializer/initializer.h"
-#include "tile/tile.h"
 #include "utils/utils.h"
 #include <gtkmm/application.h>
 #include <gtkmm/window.h>
 #include <iostream>
 #include <unistd.h>
-#include <stdio.h>
-#include <sys/types.h>
 #include <sys/wait.h>
 #include <thread>
-#include <sstream>
 #include <mutex>
 using namespace std;
-
-int CURR_FISH = 0;
-int CURR_FOOD = 0;
 // Extern
 
 // Per comunicazione con script python
@@ -31,21 +24,16 @@ int main(int argc, char **argv)
 {
    Utils::get_settings_from_json();
    auto app = Gtk::Application::create(argc, argv, "it.unibo.fsc");
-   mutex mtx;
    Gtk::Window win;
 
    win.set_title("Simulator");
-   win.set_size_request(WINDOW_SIZE_W, WINDOW_SIZE_H);
-
-   // Assegno NULL alle caselle della mappa
-   Tile *map[MAP_SIZE_W][MAP_SIZE_H] = {nullptr};
-   Initializer init(&map);
+   //win.set_size_request(Utils::WINDOW_SIZE_W, Utils::WINDOW_SIZE_H);
 
    // Lancio lo script in python per le statistiche
    int fd = pipe_py();
 
    // Rendering della mappa
-   Area c(fd, &map, &mtx, &init);
+   Area c(fd);
 
    win.add(c);
    c.show();
@@ -58,8 +46,9 @@ int main(int argc, char **argv)
    stop = true;
    //th1.join();
    kill(pid, SIGALRM);
+   kill(pid, SIGKILL);
    close(p[1]);
-   wait(NULL);
+   wait(nullptr);
    return res;
 }
 
@@ -69,7 +58,6 @@ int pipe_py()
    string cmd = "python3";
    if (pipe(p) < 0)
       exit(1);
-
    pid = fork();
    // caso di errore
    if (pid < 0)

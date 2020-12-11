@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(HelloWorld)
+project(Altruismo)
 
 if (NOT VCPKG_TOOLCHAIN)
   find_package(PkgConfig)
@@ -40,6 +40,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 set(JSON_BuildTests OFF CACHE INTERNAL "")
+set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 execute_process (
     COMMAND bash -c "pip install .."
@@ -48,6 +49,9 @@ execute_process (
 
 add_subdirectory(${nlohmann_json_source}
    src/json)
+
+FIND_PACKAGE( Boost 1.40 COMPONENTS program_options REQUIRED )
+INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
 
 add_executable(
   a.out ${GUI_OPTION} 
@@ -61,3 +65,4 @@ add_executable(
   )
 target_link_libraries(a.out PRIVATE nlohmann_json::nlohmann_json)
 target_link_libraries(a.out PRIVATE Threads::Threads)
+TARGET_LINK_LIBRARIES(a.out PRIVATE ${Boost_LIBRARIES})

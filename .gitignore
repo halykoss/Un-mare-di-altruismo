@@ -50,3 +50,6 @@ cmake-build-debug/
 
 #Images
 *.png
+*.csv
+/cmake-build-debug-coverage/
+/venv/

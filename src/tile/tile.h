@@ -8,7 +8,8 @@ public:
   // Tipi di caselle
   enum class type {
     fish,
-    food
+    food,
+    tile
   };
   type t;
   Tile();
