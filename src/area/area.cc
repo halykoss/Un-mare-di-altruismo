@@ -142,7 +142,6 @@ void Area::f(int i, int j)
 		// Se sono tutti morti
 		if (all_died == true)
 		{
-			cout << "Tutti morti";
 			this->notify();
 			break;
 		}
@@ -150,7 +149,7 @@ void Area::f(int i, int j)
 		this->notify();
 	}
 	//close(this->fd);
-	cout << "Numero di iterazioni : " << num_of_iteration << endl;
+	//cout << "Numero di iterazioni : " << num_of_iteration << endl;
 }
 
 void Area::send_out(int i, int j, Initializer::state *s)

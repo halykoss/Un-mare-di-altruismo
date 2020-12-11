@@ -118,20 +118,21 @@ def processData(stopThread, mutex):
             list_of_fish = []
             sum_kindness = 0
             sum_speed = 0
-            for _ in range(curr_fish):
-                from_out = val_from_ch()
-                val = int(from_out[0])
-                speed = int(from_out[1])
-                sum_speed += speed
-                sum_kindness += val
-                list_of_fish.append(val)
-                matrixValFish[i][j] = list_of_fish
-            sum_kindness /= curr_fish
-            (matrixValSpeed[i][j]).extend(
-                [(sum_speed / curr_fish, sum_kindness / curr_fish)])
-            (matrixValMedium[i][j]).extend(
-                [(sum_kindness / curr_fish, curr_food / curr_fish)])
-            (matrixVal[i][j]).extend([(epoch, curr_fish, curr_food)])
+            if curr_fish != 0:
+                for _ in range(curr_fish):
+                    from_out = val_from_ch()
+                    val = int(from_out[0])
+                    speed = int(from_out[1])
+                    sum_speed += speed
+                    sum_kindness += val
+                    list_of_fish.append(val)
+                    matrixValFish[i][j] = list_of_fish
+                sum_kindness /= curr_fish
+                (matrixValSpeed[i][j]).extend(
+                    [(sum_speed / curr_fish, sum_kindness)])
+                (matrixValMedium[i][j]).extend(
+                    [(sum_kindness, curr_food / curr_fish)])
+                (matrixVal[i][j]).extend([(epoch, curr_fish, curr_food)])
         except IndexError:
             pass
         except Exception as e:

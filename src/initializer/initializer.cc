@@ -362,6 +362,10 @@ bool Initializer::updateMap()
                 {
                     v->moved = 1;
                     v->curr_life += 1;
+                    if (v->life_bar <= 0)
+                    {
+                        v = nullptr;
+                    }
                 }
                 i = swapx;
                 j = swapy;
