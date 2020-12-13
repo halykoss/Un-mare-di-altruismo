@@ -1,6 +1,7 @@
 import tkinter as tk
 import json
 import os
+import sys
 import subprocess
 
 data = []
@@ -9,17 +10,21 @@ data = []
 def close(entries, root):
     global data
     for key, value in entries.items():
-        if(data[key]["type"] == "int"):
+        if data[key]["type"] == "int":
             data[key]["value"] = int(value.get())
-        if(data[key]["type"] == "float"):
+        if data[key]["type"] == "float":
+            data[key]["value"] = float(value.get())
+        if data[key]["type"] == "double":
             data[key]["value"] = float(value.get())
 
     with open("settings.json", "w") as output:
         output.write(json.dumps(data, indent=4))
 
-    proc = subprocess.Popen(["./bin/a.out"])
-    root.withdraw()
-    proc.wait()
+    with open('values.csv', 'w') as infile:
+        proc = subprocess.Popen(['./bin/a.out'],
+                                stdin=sys.stdin, stdout=infile, stderr=sys.stderr)
+        root.withdraw()
+        proc.wait()
 
     exit(0)
 
@@ -28,7 +33,7 @@ def makeform(root):
     global data
     entries = {}
     for key, field in data.items():
-        if(field["display"]):
+        if field["display"]:
             row = tk.Frame(root)
             lab = tk.Label(row, width=22, text=field["name"]+": ", anchor='w')
             ent = tk.Entry(row)
