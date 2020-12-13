@@ -10,19 +10,32 @@
 #include "../utils/utils.h"
 #include <mutex>
 #include <thread>
+#include <boost/bind.hpp>
 #include <unistd.h>
 
 using namespace std;
 
-Area::Area(int fd, Tile *(*mapInit)[MAP_SIZE_W][MAP_SIZE_H], mutex *mtx, Initializer *init) : m_Dispatcher()
+Area::Area(int fd) : m_Dispatcher()
 {
 	this->fd = fd;
-	this->mtx = mtx;
-	this->init = init;
-	map = mapInit;
+	for (int k = 0; k < 3; k++)
+	{
+		for (int ky = 0; ky < 3; ky++)
+		{
+			this->mtx[k][ky] = new std::mutex();
+			this->init[k][ky] = new Initializer();
+		}
+	}
 	m_Dispatcher.connect(sigc::mem_fun(*this, &Area::trigger_redraw));
-	m_WorkerThread = new std::thread(sigc::mem_fun(*this, &Area::f));
-	send_out();
+	for (int k = 0; k < 3; k++)
+	{
+		for (int ky = 0; ky < 3; ky++)
+		{
+			Initializer::state *s = this->init[k][ky]->getStringState(k, ky);
+			m_WorkerThread = new std::thread(boost::bind(&Area::f, this, k, ky));
+			send_out(k, ky, s);
+		}
+	}
 }
 
 Area::~Area()
@@ -36,50 +49,62 @@ bool Area::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
 	const int width = allocation.get_width();
 	const int height = allocation.get_height();
 	srand((unsigned)time(NULL));
-	this->mtx->lock();
-	// Stampo il campo
-	for (int i = 0; i < MAP_SIZE_W; i++)
+	Utils::WINDOW_SIZE_W = width / 3;
+	Utils::WINDOW_SIZE_H = height / 3;
+	Utils::SIZE_CELL_W = Utils::WINDOW_SIZE_W / MAP_SIZE_W;
+	Utils::SIZE_CELL_H = Utils::WINDOW_SIZE_H / MAP_SIZE_H;
+	// Stampo i campi
+	for (int k = 0; k < 3; k++)
 	{
-		for (int j = 0; j < MAP_SIZE_H; j++)
+		for (int ky = 0; ky < 3; ky++)
 		{
-			cr->set_source_rgb(0.6, 0.8, 1.0);
-			cr->rectangle(j * SIZE_CELL_W, i * SIZE_CELL_H, SIZE_CELL_W, SIZE_CELL_H);
-			cr->fill();
-		}
-	}
-	// Mostro il raggio visivo dei pesci
-	for (int i = 0; i < MAP_SIZE_W; i++)
-	{
-		for (int j = 0; j < MAP_SIZE_H; j++)
-		{
-			if ((*map)[i][j] != 0)
+			this->mtx[k][ky]->lock();
+			auto map = init[k][ky]->map;
+			// Stampo il fondo blu del campo
+			for (int i = 0; i < MAP_SIZE_W; i++)
 			{
-				if (Fish *v = dynamic_cast<Fish *>((*map)[i][j]))
+				for (int j = 0; j < MAP_SIZE_H; j++)
 				{
-					cr->save();
-					cr->arc(j * SIZE_CELL_W + (SIZE_CELL_W / 2), i * SIZE_CELL_H + (SIZE_CELL_H / 2), ((float)SENSOR_RADIUS * SIZE_CELL_H + (SIZE_CELL_H / 2)), 0.0, 2.0 * M_PI); // circonferenza intera
-					cr->set_source_rgba(0.0, 0.0, 0.8, 0.3);																													  // trasparenza
-					cr->fill_preserve();
-					cr->restore(); // Ritorno al colore opaco
-					cr->stroke();
+					cr->set_source_rgb(0.6, 0.8, 1.0);
+					cr->rectangle((k * Utils::WINDOW_SIZE_W) + j * Utils::SIZE_CELL_W, (ky * Utils::WINDOW_SIZE_H) + i * Utils::SIZE_CELL_H, Utils::SIZE_CELL_W, Utils::SIZE_CELL_H);
+					cr->fill();
 				}
 			}
-		}
-	}
-	// Stampo la cella con cibo/pesce
-	for (int i = 0; i < MAP_SIZE_W; i++)
-	{
-		for (int j = 0; j < MAP_SIZE_H; j++)
-		{
-			if ((*map)[i][j] != 0)
+			// Mostro il raggio visivo dei pesci
+			for (int i = 0; i < MAP_SIZE_W; i++)
 			{
-				(*map)[i][j]->setColor(cr);
-				cr->rectangle(j * SIZE_CELL_W, i * SIZE_CELL_H, SIZE_CELL_W, SIZE_CELL_H);
-				cr->fill();
+				for (int j = 0; j < MAP_SIZE_H; j++)
+				{
+					if (map[i][j] != nullptr)
+					{
+						if (map[i][j]->t == Tile::type::fish)
+						{
+							cr->save();
+							cr->arc((k * Utils::WINDOW_SIZE_W) + j * Utils::SIZE_CELL_W + (Utils::SIZE_CELL_W / 2), (ky * Utils::WINDOW_SIZE_H) + i * Utils::SIZE_CELL_H + (Utils::SIZE_CELL_H / 2), ((float)SENSOR_RADIUS * Utils::SIZE_CELL_H + (Utils::SIZE_CELL_H / 2)), 0.0, 2.0 * M_PI); // circonferenza intera
+							cr->set_source_rgba(0.0, 0.0, 0.8, 0.3);																																																						   // trasparenza
+							cr->fill_preserve();
+							cr->restore(); // Ritorno al colore opaco
+							cr->stroke();
+						}
+					}
+				}
 			}
+			// Stampo la cella con cibo/pesce
+			for (int i = 0; i < MAP_SIZE_W; i++)
+			{
+				for (int j = 0; j < MAP_SIZE_H; j++)
+				{
+					if (map[i][j] != nullptr)
+					{
+						map[i][j]->setColor(cr);
+						cr->rectangle((k * Utils::WINDOW_SIZE_W) + j * Utils::SIZE_CELL_W, (ky * Utils::WINDOW_SIZE_H) + i * Utils::SIZE_CELL_H, Utils::SIZE_CELL_W, Utils::SIZE_CELL_H);
+						cr->fill();
+					}
+				}
+			}
+			this->mtx[k][ky]->unlock();
 		}
 	}
-	this->mtx->unlock();
 	return true;
 }
 
@@ -100,47 +125,49 @@ void Area::notify()
 	m_Dispatcher.emit();
 }
 // Funzione che aggiorna la mappa
-void Area::f()
+void Area::f(int i, int j)
 {
 	int num_of_iteration = 0;
 	bool all_died = false;
 	while (!all_died)
 	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(REFRESH_TIME));
-		all_died = init->updateMap(this->mtx);
-		send_out();
+		//std::this_thread::sleep_for(std::chrono::milliseconds(REFRESH_TIME));
+		this->mtx[i][j]->lock();
+		all_died = init[i][j]->updateMap();
+		init[i][j]->epoch++;
+		Initializer::state *s = init[i][j]->getStringState(i, j);
+		this->mtx[i][j]->unlock();
+		//new std::thread(boost::bind(&Area::send_out, this, i, j, s));
+		this->send_out(i, j, s);
 		// Se sono tutti morti
 		if (all_died == true)
 		{
-			cout << "Tutti morti";
 			this->notify();
 			break;
 		}
 		num_of_iteration++;
 		this->notify();
 	}
-	close(this->fd);
-	cout << "Numero di iterazioni : " << num_of_iteration << endl;
+	//close(this->fd);
+	//cout << "Numero di iterazioni : " << num_of_iteration << endl;
 }
 
-void Area::send_out()
+void Area::send_out(int i, int j, Initializer::state *s)
 {
 	// Scrivo al software in Python il numero di pesci e di cibo
-	this->mtx->lock();
-	write(this->fd, &init->CURR_FISH, sizeof(init->CURR_FISH));
-	write(this->fd, &init->CURR_FOOD, sizeof(init->CURR_FOOD));
-	for (int i = 0; i < MAP_SIZE_W; i++)
+	fdMtx.lock();
+	cout << s->toString;
+	int buffSize = snprintf(NULL, 0, "%d;%d;%d;%d;%d\n", i, j, s->NUM_OF_FISH, s->CURR_FOOD, s->epoch);
+	char c[buffSize];
+	sprintf(c, "%d;%d;%d;%d;%d\n", i, j, s->NUM_OF_FISH, s->CURR_FOOD, s->epoch);
+	write(this->fd, c, sizeof(c));
+	for (int i = 0; i < s->NUM_OF_FISH; i++)
 	{
-		for (int j = 0; j < MAP_SIZE_H; j++)
-		{
-			if ((*map)[i][j] != 0)
-			{
-				if (Fish *v = dynamic_cast<Fish *>((*map)[i][j]))
-				{
-					write(this->fd, &(v->kindness), sizeof(v->kindness));
-				}
-			}
-		}
+		int dim = snprintf(NULL, 0, "%d;%d;%f;%lf\n", s->kindness[i], s->speed[i], s->triggerEnergy[i], s->life_bar[i]);
+		char buf[dim];
+		sprintf(buf, "%d;%d;%f;%lf\n", s->kindness[i], s->speed[i], s->triggerEnergy[i], s->life_bar[i]);
+		write(this->fd, buf, sizeof(buf));
 	}
-	this->mtx->unlock();
+	fdMtx.unlock();
+	delete s;
 }
