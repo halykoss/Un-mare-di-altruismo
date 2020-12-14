@@ -13,6 +13,8 @@ double Utils::EN_FOOD = 0.33;
 double Utils::EN_REPR = 0.40;
 double Utils::BONUS_RATE = 0.20;
 double Utils::MUTATION = 0.10;
+bool Utils::FIGHT_ACTIVE = true;
+bool Utils::SHARE_ACTIVE = true;
 
 void Utils::get_settings_from_json()
 {
@@ -28,4 +30,6 @@ void Utils::get_settings_from_json()
     EN_REPR = j3["EN_REPR"]["value"];
     BONUS_RATE = j3["BONUS_RATE"]["value"];
     MUTATION = j3["MUTATION"]["value"];
+    FIGHT_ACTIVE = j3["FIGHT_ACTIVE"]["value"];
+    SHARE_ACTIVE = j3["SHARE_ACTIVE"]["value"];
 }

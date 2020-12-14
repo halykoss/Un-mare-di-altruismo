@@ -131,7 +131,7 @@ void Area::f(int i, int j)
 	bool all_died = false;
 	while (!all_died)
 	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(REFRESH_TIME));
+		//std::this_thread::sleep_for(std::chrono::milliseconds(REFRESH_TIME));
 		this->mtx[i][j]->lock();
 		all_died = init[i][j]->updateMap();
 		init[i][j]->epoch++;
@@ -163,9 +163,9 @@ void Area::send_out(int i, int j, Initializer::state *s)
 	write(this->fd, c, sizeof(c));
 	for (int i = 0; i < s->NUM_OF_FISH; i++)
 	{
-		int dim = snprintf(NULL, 0, "%d;%d;%f;%lf\n", s->kindness[i], s->speed[i], s->triggerEnergy[i], s->life_bar[i]);
+		int dim = snprintf(NULL, 0, "%d;%d;%f;%d;%lf\n", s->kindness[i], s->speed[i], s->triggerEnergy[i], s->currLife[i], s->life_bar[i]);
 		char buf[dim];
-		sprintf(buf, "%d;%d;%f;%lf\n", s->kindness[i], s->speed[i], s->triggerEnergy[i], s->life_bar[i]);
+		sprintf(buf, "%d;%d;%f;%d;%lf\n", s->kindness[i], s->speed[i], s->triggerEnergy[i], s->currLife[i], s->life_bar[i]);
 		write(this->fd, buf, sizeof(buf));
 	}
 	fdMtx.unlock();

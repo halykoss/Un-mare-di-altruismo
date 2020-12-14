@@ -65,14 +65,18 @@ void Initializer::shareorFightFoodAction(int i, int j)
                         trov = true;
                         Fish *f = (Fish *)(map[i][j]);
                         Fish *f1 = (Fish *)(map[i + k][j + h]);
-                        if (f->kindness + f1->kindness >= 1.0)
+                        if (Utils::SHARE_ACTIVE && f->kindness + f1->kindness >= 1.0)
                         {
                             f->shareFood(f1);
                             CURR_FOOD--;
                         }
                         else
                         {
-                            bool eat = f->fightFood(f1);
+                            bool eat = true;
+                            if (Utils::FIGHT_ACTIVE)
+                            {
+                                eat = f->fightFood(f1);
+                            }
                             if (eat)
                             {
                                 CURR_FOOD--;
@@ -399,10 +403,12 @@ Initializer::state *Initializer::getStringState(int idx, int idy)
                     ss << "," << f->kindness;
                     ss << "," << f->speed;
                     ss << "," << f->life_bar;
+                    ss << "," << f->curr_life;
                     ss << "," << f->triggerEnergy;
                     st->kindness.push_back(f->kindness);
                     st->speed.push_back(f->speed);
                     st->triggerEnergy.push_back(f->triggerEnergy);
+                    st->currLife.push_back(f->curr_life);
                     st->life_bar.push_back(f->life_bar);
                 }
             }

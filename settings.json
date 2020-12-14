@@ -80,5 +80,17 @@
         "type": "double",
         "name": "Probabilit\u00e0 mutazione",
         "display": true
+    },
+    "SHARE_ACTIVE": {
+        "value": true,
+        "type": "bool",
+        "name": "Condivisione",
+        "display": true
+    },
+    "FIGHT_ACTIVE": {
+        "value": true,
+        "type": "bool",
+        "name": "Lotta",
+        "display": true
     }
 }

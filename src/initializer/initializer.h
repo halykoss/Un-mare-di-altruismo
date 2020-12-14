@@ -33,6 +33,7 @@ public:
         string toString;
         vector<int> kindness;
         vector<int> speed;
+        vector<int> currLife;
         vector<float> triggerEnergy;
         vector<double> life_bar;
     };
