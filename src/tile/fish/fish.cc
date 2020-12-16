@@ -34,7 +34,7 @@ Fish *Fish::procreate(Fish *f1)
 	int kidspeed;
 	float kidtrigger;
 
-	if (rand() / RAND_MAX <= Utils::MUTATION)
+	if (rand() / RAND_MAX < Utils::MUTATION)
 	{ //possible mutazione
 		kidkind = rand() % 101;
 	}

@@ -364,8 +364,10 @@ bool Initializer::updateMap()
                 }
                 if (v != nullptr)
                 {
+					if(v->moved == 0){	
+						v->curr_life += 1;
+					}
                     v->moved = 1;
-                    v->curr_life += 1;
                     if (v->life_bar <= 0)
                     {
                         v = nullptr;

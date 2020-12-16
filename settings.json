@@ -14,13 +14,13 @@
         "display": true
     },
     "NUM_OF_FOOD": {
-        "value": 160,
+        "value": 200,
         "type": "int",
         "name": "Numero iniziale cibo",
         "display": true
     },
     "NUM_OF_FOOD_PER_SPAWN": {
-        "value": 10,
+        "value": 15,
         "type": "int",
         "name": "Spawn rate cibo",
         "display": true
@@ -42,7 +42,7 @@
         "display": false
     },
     "DECAY_TIME": {
-        "value": 0.01,
+        "value": 0.02,
         "type": "float",
         "name": "Energia per passo",
         "display": true
@@ -52,7 +52,7 @@
         "display": false
     },
     "FIGHT_LOSS": {
-        "value": 1.0,
+        "value": 3.0,
         "type": "double",
         "name": "Coeff energia per combattimento",
         "display": true
@@ -82,10 +82,10 @@
         "display": true
     },
     "LIFE_TIME": {
-    	"value":100,
-    	"type":"int",
-    	"name":"Tempo vita di un pesce",
-    	"display":true
+        "value": 300,
+        "type": "int",
+        "name": "Tempo vita di un pesce",
+        "display": true
     },
     "SHARE_ACTIVE": {
         "value": true,

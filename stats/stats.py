@@ -130,11 +130,10 @@ def processData(stopThread, mutex):
                     sum_age += age
                     list_of_fish.append(val)
                     matrixValFish[i][j] = list_of_fish
-                sum_kindness /= curr_fish
                 (matrixValSpeed[i][j]).extend(
                     [(curr_fish, curr_food)])
                 (matrixValMedium[i][j]).extend(
-                    [(sum_kindness, sum_age / curr_fish)])
+                    [(sum_kindness / curr_fish / curr_food, sum_age / curr_fish / curr_food)])
                 (matrixVal[i][j]).extend([(epoch, curr_fish, curr_food)])
         except IndexError:
             pass
