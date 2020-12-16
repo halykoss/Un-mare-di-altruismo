@@ -14,13 +14,13 @@
         "display": true
     },
     "NUM_OF_FOOD": {
-        "value": 230,
+        "value": 160,
         "type": "int",
         "name": "Numero iniziale cibo",
         "display": true
     },
     "NUM_OF_FOOD_PER_SPAWN": {
-        "value": 15,
+        "value": 10,
         "type": "int",
         "name": "Spawn rate cibo",
         "display": true
@@ -58,7 +58,7 @@
         "display": true
     },
     "EN_FOOD": {
-        "value": 0.7,
+        "value": 0.4,
         "type": "double",
         "name": "Energia cibo",
         "display": true
@@ -70,16 +70,22 @@
         "display": true
     },
     "BONUS_RATE": {
-        "value": 0.2,
+        "value": 0.3,
         "type": "double",
         "name": "Percentuale banchi",
         "display": true
     },
     "MUTATION": {
-        "value": 0.1,
+        "value": 0.01,
         "type": "double",
         "name": "Probabilit\u00e0 mutazione",
         "display": true
+    },
+    "LIFE_TIME": {
+    	"value":100,
+    	"type":"int",
+    	"name":"Tempo vita di un pesce",
+    	"display":true
     },
     "SHARE_ACTIVE": {
         "value": true,

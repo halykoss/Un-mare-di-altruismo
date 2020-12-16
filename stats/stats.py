@@ -118,20 +118,23 @@ def processData(stopThread, mutex):
             list_of_fish = []
             sum_kindness = 0
             sum_speed = 0
+            sum_age = 0
             if curr_fish != 0:
                 for _ in range(curr_fish):
                     from_out = val_from_ch()
                     val = int(from_out[0])
                     speed = int(from_out[1])
+                    age = int(from_out[3])
                     sum_speed += speed
                     sum_kindness += val
+                    sum_age += age
                     list_of_fish.append(val)
                     matrixValFish[i][j] = list_of_fish
                 sum_kindness /= curr_fish
                 (matrixValSpeed[i][j]).extend(
-                    [(sum_speed / curr_fish, sum_kindness)])
+                    [(curr_fish, curr_food)])
                 (matrixValMedium[i][j]).extend(
-                    [(sum_kindness, curr_food / curr_fish)])
+                    [(sum_kindness, sum_age / curr_fish)])
                 (matrixVal[i][j]).extend([(epoch, curr_fish, curr_food)])
         except IndexError:
             pass
@@ -165,7 +168,7 @@ t.start()
 
 # Imposto animazione e posiziono l'immagine
 ani = animation.FuncAnimation(fig, animate, fargs=(
-    xs, ys, ys2, [], mutex), interval=(sys.argv[1]))
+    xs, ys, ys2, [], mutex), interval=(1000))
 plt.title("Live Data")
 fig.canvas.set_window_title('Stats')
 move_figure(fig, 950, 200)

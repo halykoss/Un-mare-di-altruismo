@@ -2,6 +2,7 @@
 #include "../tile.h"
 #include "math.h"
 #include <iostream>
+#include <../../utils/utils.h>
 // ho fatto in modo che l'energia non scenda sotto zero, quando diventa zero il pesce deve morire
 
 using namespace std;
@@ -13,7 +14,7 @@ Fish::Fish(int kindness, int speed, float triggerEnergy)
 	this->speed = speed;
 	this->life_bar = (float)rand() / RAND_MAX;
 	this->triggerEnergy = triggerEnergy;
-	this->life_time = ((float)rand() / RAND_MAX) * 100;
+	this->life_time = Utils::LIFE_TIME;
 }
 
 Fish::~Fish() {}

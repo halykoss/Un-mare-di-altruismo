@@ -5,6 +5,7 @@ int Utils::NUM_OF_FISH = 300;
 int Utils::NUM_OF_FOOD_PER_SPAWN = 5;
 int Utils::WINDOW_SIZE_W = 1000;
 int Utils::WINDOW_SIZE_H = 1000;
+int Utils::LIFE_TIME = 100;
 int Utils::SIZE_CELL_W = WINDOW_SIZE_W / MAP_SIZE_W;
 int Utils::SIZE_CELL_H = WINDOW_SIZE_H / MAP_SIZE_H;
 double Utils::DECAY_TIME = 0.02;
@@ -32,4 +33,5 @@ void Utils::get_settings_from_json()
     MUTATION = j3["MUTATION"]["value"];
     FIGHT_ACTIVE = j3["FIGHT_ACTIVE"]["value"];
     SHARE_ACTIVE = j3["SHARE_ACTIVE"]["value"];
+    LIFE_TIME = j3["LIFE_TIME"]["value"];
 }

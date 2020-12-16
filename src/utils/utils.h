@@ -20,6 +20,7 @@ public:
     static int NUM_OF_FISH;
     static int NUM_OF_FOOD;
     static int NUM_OF_FOOD_PER_SPAWN;
+    static int LIFE_TIME;
     static double DECAY_TIME;
     static void get_settings_from_json();
     static double FIGHT_LOSS; //= 1;    //coeff perdita energia in lotta
