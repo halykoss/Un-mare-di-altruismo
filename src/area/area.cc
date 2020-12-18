@@ -32,7 +32,7 @@ Area::Area(int fd) : m_Dispatcher()
 		for (int ky = 0; ky < 3; ky++)
 		{
 			Initializer::state *s = this->init[k][ky]->getStringState(k, ky);
-			m_WorkerThread = new std::thread(boost::bind(&Area::f, this, k, ky));
+			m_WorkerThread[k * 3 + ky] = new std::thread(boost::bind(&Area::f, this, k, ky));
 			send_out(k, ky, s);
 		}
 	}
@@ -129,7 +129,7 @@ void Area::f(int i, int j)
 {
 	int num_of_iteration = 0;
 	bool all_died = false;
-	while (!all_died)
+	while (!all_died && !stop.load())
 	{
 		//std::this_thread::sleep_for(std::chrono::milliseconds(REFRESH_TIME));
 		this->mtx[i][j]->lock();

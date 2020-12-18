@@ -14,9 +14,6 @@ using namespace std;
 // Per comunicazione con script python
 int p[2], pid;
 
-// Per Thread di calcolo
-bool stop = false;
-
 void f(Initializer *init, Area *c, mutex *mx);
 int pipe_py();
 
@@ -41,10 +38,10 @@ int main(int argc, char **argv)
    // Lancio il thread per i calcoli
    // thread th1(f, &init, &c, &mtx);
    int res = app->run(win);
-
-   // Quando la finestra si chiude fermo anche il thread dei calcoli
-   stop = true;
-   //th1.join();
+   c.stop = true;
+   for(int i = 0; i < 9; i++){
+   	c.m_WorkerThread[i]->join();
+   }
    kill(pid, SIGALRM);
    kill(pid, SIGKILL);
    close(p[1]);

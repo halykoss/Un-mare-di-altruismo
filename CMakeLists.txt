@@ -43,7 +43,7 @@ set(JSON_BuildTests OFF CACHE INTERNAL "")
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 execute_process (
-    COMMAND bash -c "pip install .."
+    COMMAND bash -c "pip3 install .."
     OUTPUT_VARIABLE outVar
 )
 

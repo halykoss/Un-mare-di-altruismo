@@ -5,6 +5,7 @@
 #include "../tile/tile.h"
 #include "../initializer/initializer.h"
 #include <mutex>
+#include <atomic>
 #include <gtkmm.h>
 #include <thread>
 #include <unistd.h>
@@ -18,6 +19,8 @@ public:
   Area(int fd);
   virtual ~Area();
   void trigger_redraw();
+  std::thread *m_WorkerThread[9];
+  std::atomic<bool> stop{false};
 
 protected:
   //Override il disegno di default
@@ -32,7 +35,6 @@ protected:
   void f(int i, int j);
   void send_out(int i, int j, Initializer::state *s);
   void notify();
-  std::thread *m_WorkerThread;
 };
 
 #endif // GTKMM_EXAMPLE_CLOCK_H
