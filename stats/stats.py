@@ -54,6 +54,8 @@ def animate(i, xs, ys, ys2, list_of_fish, mutex):
                 axs[k][ky].title.set_text(str(3 * k + ky + 1) + ' Field')
                 axs[k][ky].plot(valX, valY, label="Fish", color="maroon")
                 axs[k][ky].plot(valX, food, label="Food", color="green")
+                axs[k][ky].set_xlabel('xlabel' + str(3 * k + ky))
+                axs[k][ky].set_ylabel('ylabel' + str(3 * k + ky))
     extendedX = []
     extendedY = []
     for k in range(0, 3):
@@ -69,6 +71,8 @@ def animate(i, xs, ys, ys2, list_of_fish, mutex):
     axs[0][3].clear()
     axs[0][3].scatter(extendedX, extendedY, alpha=0.3,
                       marker='o', facecolor='maroon')
+    axs[0][3].set_xlabel('xlabel 0')
+    axs[0][3].set_ylabel('ylabel 3')
     list_of_fish = []
     for k in range(0, 3):
         for ky in range(0, 3):
@@ -88,6 +92,8 @@ def animate(i, xs, ys, ys2, list_of_fish, mutex):
     axs[1][3].clear()
     axs[1][3].scatter(extendedX, extendedY, alpha=0.3,
                       marker='o', facecolor='maroon')
+    axs[1][3].set_xlabel('xlabel 1')
+    axs[1][3].set_ylabel('ylabel 3')
     list_of_fish = []
     for k in range(0, 3):
         for ky in range(0, 3):
@@ -100,6 +106,9 @@ def animate(i, xs, ys, ys2, list_of_fish, mutex):
         patches[idx].set_fc('#%02x%02x%02x' % (
             int(((idx * (100/num_of_bins) / 100)) * 255), 0, 0))
 
+    axs[2][3].set_xlabel('xlabel 2')
+    axs[2][3].set_ylabel('ylabel 3')
+    
     mutex.release()
 
 
