@@ -68,7 +68,7 @@ Fish *Fish::procreate(Fish *f1)
 
 	if (rand() / RAND_MAX <= Utils::MUTATION)
 	{
-		kidtrigger = 0.5 + (float)rand() / RAND_MAX / 2;
+		kidtrigger = Utils::EN_REPR + (float)rand() / RAND_MAX * (1 - Utils::EN_REPR);
 	}
 	else
 	{

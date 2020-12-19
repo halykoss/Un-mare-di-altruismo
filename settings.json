@@ -64,7 +64,7 @@
         "display": true
     },
     "EN_REPR": {
-        "value": 0.4,
+        "value": 0.7,
         "type": "double",
         "name": "Costo energia riproduzione",
         "display": true

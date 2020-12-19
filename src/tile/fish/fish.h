@@ -13,7 +13,7 @@ const double MUTATION = 0.10; */  //probabilità mutazione
 class Fish : public Tile
 {
 public:
-    Fish(int kindness, int speed = 5, float triggerEnergy = 0.7); // messi settati implicitamente per non cambiare tutto il codice prima
+    Fish(int kindness, int speed, float triggerEnergy); 
     virtual ~Fish();
     // Colore della casella
     void setColor(const Cairo::RefPtr<Cairo::Context> &cr) override;
@@ -40,9 +40,6 @@ public:
     int life_time;
     // Tempo di vita corrente
     int curr_life = 0;
-
-protected:
-    //double enFood = 0.33; // energia che dà il cibo 	L'HO MESSA GLOBALE
 };
 
 #endif

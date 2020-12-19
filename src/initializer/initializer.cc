@@ -180,7 +180,7 @@ Initializer::Initializer()
         int r1 = dist(mt) % MAP_SIZE_W, r2 = dist(mt) % MAP_SIZE_H;
         if (map[r1][r2] == nullptr)
         {
-            map[r1][r2] = new Fish{(int)((float)100 * dist(mt) / MAX_RAND_VALUE), (dist(mt) % 5) + 1, ((float)(dist(mt) / MAX_RAND_VALUE))};
+            map[r1][r2] = new Fish{(int)((float)100 * dist(mt) / MAX_RAND_VALUE), (dist(mt) % 5) + 1, (Utils::EN_REPR + (float)rand() / RAND_MAX * (1 - Utils::EN_REPR))};
             list_of_fish.push_front(dynamic_cast<Fish *>(map[r1][r2]));
             CURR_FISH++;
         }
