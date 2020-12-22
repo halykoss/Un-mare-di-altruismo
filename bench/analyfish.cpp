@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <ctime>
 int get_int(std::string line, int cols)
 {
 	std::string delimiter = ",";
@@ -187,7 +188,17 @@ graph4->Draw("AP");
 		h->AddBinContent(i + 1, ls_kind[i] / ls_fish[i]);
 	}
 	h->Draw();
-
+	
+	time_t now = time(0);
+	char* dt = ctime(&now);
+		
+	TFile *file = new TFile (dt, "NEW");
+	graph1->Write();
+	graph2->Write();
+	h->Write();
+	file->Close();
+	
+	
 	double sum1 = ls_kind[0] + ls_kind[1] + ls_kind[2] + ls_kind[3] + ls_kind[4] + ls_kind[5] + ls_kind[6] + ls_kind[7] + ls_kind[8];
 	double sum2 = ls_fish[0] + ls_fish[1] + ls_fish[2] + ls_fish[3] + ls_fish[4] + ls_fish[5] + ls_fish[6] + ls_fish[7] + ls_fish[8];
 	cout << "Media altruismo =\t" << sum1 / sum2;
