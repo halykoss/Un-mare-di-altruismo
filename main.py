@@ -21,7 +21,7 @@ def close(entries, root):
     with open("settings.json", "w") as output:
         output.write(json.dumps(data, indent=4))
 
-    with open('values.csv', 'w') as infile:
+    with open('bench/values.csv', 'w') as infile:
         proc = subprocess.Popen(['./bin/a.out'],
                                 stdin=sys.stdin, stdout=infile, stderr=sys.stderr)
         root.withdraw()

@@ -8,13 +8,13 @@
         "display": false
     },
     "NUM_OF_FISH": {
-        "value": 100,
+        "value": 80,
         "type": "int",
         "name": "Numero iniziale pesci",
         "display": true
     },
     "NUM_OF_FOOD": {
-        "value": 200,
+        "value": 160,
         "type": "int",
         "name": "Numero iniziale cibo",
         "display": true
@@ -42,7 +42,7 @@
         "display": false
     },
     "DECAY_TIME": {
-        "value": 0.02,
+        "value": 0.01,
         "type": "float",
         "name": "Energia per passo",
         "display": true
@@ -52,27 +52,27 @@
         "display": false
     },
     "FIGHT_LOSS": {
-        "value": 3.0,
+        "value": 2.0,
         "type": "double",
-        "name": "Coeff energia per combattimento",
+        "name": "Coeff. en. combattimento",
         "display": true
     },
     "EN_FOOD": {
-        "value": 0.4,
+        "value": 0.3,
         "type": "double",
         "name": "Energia cibo",
         "display": true
     },
     "EN_REPR": {
-        "value": 0.7,
+        "value": 0.4,
         "type": "double",
-        "name": "Costo energia riproduzione",
+        "name": "Costo en. riproduzione",
         "display": true
     },
     "BONUS_RATE": {
         "value": 0.3,
         "type": "double",
-        "name": "Percentuale banchi",
+        "name": "Frazione banchi",
         "display": true
     },
     "MUTATION": {
@@ -84,7 +84,7 @@
     "LIFE_TIME": {
         "value": 300,
         "type": "int",
-        "name": "Tempo vita di un pesce",
+        "name": "Tempo max di vita",
         "display": true
     },
     "SHARE_ACTIVE": {
