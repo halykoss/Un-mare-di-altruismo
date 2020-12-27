@@ -190,9 +190,10 @@ graph4->Draw("AP");
 	h->Draw();
 	
 	time_t now = time(0);
-	char* dt = ctime(&now);
-		
-	TFile *file = new TFile (dt, "NEW");
+
+	string ss = ctime(&now);
+	string name = ss + ".root";
+	TFile *file = new TFile (name.c_str(), "NEW");
 	graph1->Write();
 	graph2->Write();
 	h->Write();
@@ -201,6 +202,11 @@ graph4->Draw("AP");
 	
 	double sum1 = ls_kind[0] + ls_kind[1] + ls_kind[2] + ls_kind[3] + ls_kind[4] + ls_kind[5] + ls_kind[6] + ls_kind[7] + ls_kind[8];
 	double sum2 = ls_fish[0] + ls_fish[1] + ls_fish[2] + ls_fish[3] + ls_fish[4] + ls_fish[5] + ls_fish[6] + ls_fish[7] + ls_fish[8];
-	cout << "Media altruismo =\t" << sum1 / sum2;
+	
+	ofstream os(ss + ".vl");
+	
+	os << "Media altruismo =\t" << sum1 / sum2;
+	
+	os.close();
 	myfile.close();
 }
