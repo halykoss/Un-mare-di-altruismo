@@ -189,11 +189,12 @@ graph4->Draw("AP");
 	}
 	h->Draw();
 	
-	time_t now = time(0);
+	/*time_t now = time(0);
 
 	string ss = ctime(&now);
-	string name = ss + ".root";
-	TFile *file = new TFile (name.c_str(), "NEW");
+	string name = ss + ".root";*/
+	
+	TFile *file = new TFile ("Graphs.root", "NEW");
 	graph1->Write();
 	graph2->Write();
 	h->Write();
