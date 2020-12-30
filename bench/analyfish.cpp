@@ -204,7 +204,7 @@ graph4->Draw("AP");
 	double sum1 = ls_kind[0] + ls_kind[1] + ls_kind[2] + ls_kind[3] + ls_kind[4] + ls_kind[5] + ls_kind[6] + ls_kind[7] + ls_kind[8];
 	double sum2 = ls_fish[0] + ls_fish[1] + ls_fish[2] + ls_fish[3] + ls_fish[4] + ls_fish[5] + ls_fish[6] + ls_fish[7] + ls_fish[8];
 	
-	ofstream os(ss + ".vl");
+	ofstream os("media.vl");
 	
 	os << "Media altruismo =\t" << sum1 / sum2;
 	
