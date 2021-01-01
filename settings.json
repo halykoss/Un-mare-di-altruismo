@@ -14,7 +14,7 @@
         "display": true
     },
     "NUM_OF_FOOD": {
-        "value": 180,
+        "value": 150,
         "type": "int",
         "name": "Numero iniziale cibo",
         "display": true
@@ -82,7 +82,7 @@
         "display": true
     },
     "LIFE_TIME": {
-        "value": 300,
+        "value": 500,
         "type": "int",
         "name": "Tempo max di vita",
         "display": true

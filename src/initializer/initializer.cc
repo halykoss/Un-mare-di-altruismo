@@ -65,7 +65,7 @@ void Initializer::shareorFightFoodAction(int i, int j)
                         trov = true;
                         Fish *f = (Fish *)(map[i][j]);
                         Fish *f1 = (Fish *)(map[i + k][j + h]);
-                        if (Utils::SHARE_ACTIVE && f->kindness + f1->kindness >= 1.0)
+                        if (Utils::SHARE_ACTIVE && f->kindness + f1->kindness >= 100)     //.............................................................................
                         {
                             f->shareFood(f1);
                             CURR_FOOD--;

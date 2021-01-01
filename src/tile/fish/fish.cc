@@ -81,7 +81,6 @@ Fish *Fish::procreate(Fish *f1)
 			kidtrigger = f1->triggerEnergy;
 		}
 	}
-
 	return new Fish(kidkind, kidspeed, kidtrigger);
 }
 
@@ -89,9 +88,9 @@ void Fish::shareFood(Fish *f1)
 { // ATTENZIONE NON CANCELLA IL CIBO DALLA MAPPA (ma è da fare)
 	double food = Utils::EN_FOOD;
 
-	if ((this->kindness + f1->kindness) > 130 && (rand() / RAND_MAX) <= Utils::BONUS_RATE)
+	if ((this->kindness + f1->kindness) > 150 && (rand() / RAND_MAX) <= Utils::BONUS_RATE)
 	{ //il banco di pesci aumenta il cibo
-		food = Utils::EN_FOOD * (1 + 3 * rand() / RAND_MAX);
+		food = 4*(Utils::EN_FOOD); //(1 + 3 * rand() / RAND_MAX);
 	}
 
 	double enGain = food / 2 * (f1->life_bar / (f1->life_bar + this->life_bar) + ((double)f1->kindness) / ((double)f1->kindness + (double)this->kindness));
@@ -162,7 +161,7 @@ void Fish::eat()
 {
 	this->life_bar += Utils::EN_FOOD;
 	if (this->life_bar > 1)
-	{ //CONTROLLA CHE L'ENERGIA DEL PESCE NON SUPERI 1
+	{ //CONTROLLA CHE L'ENERGIA DEL PESCE NON SUPERI 1	
 		this->life_bar = 1;
 	}
 }
