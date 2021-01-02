@@ -90,7 +90,7 @@ void Fish::shareFood(Fish *f1)
 
 	if ((this->kindness + f1->kindness) > 150 && (rand() / RAND_MAX) <= Utils::BONUS_RATE)
 	{ //il banco di pesci aumenta il cibo
-		food = 4*(Utils::EN_FOOD); //(1 + 3 * rand() / RAND_MAX);
+		food = (1 + 3 * rand() / RAND_MAX);
 	}
 
 	double enGain = food / 2 * (f1->life_bar / (f1->life_bar + this->life_bar) + ((double)f1->kindness) / ((double)f1->kindness + (double)this->kindness));

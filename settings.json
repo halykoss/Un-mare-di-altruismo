@@ -14,7 +14,7 @@
         "display": true
     },
     "NUM_OF_FOOD": {
-        "value": 150,
+        "value": 180,
         "type": "int",
         "name": "Numero iniziale cibo",
         "display": true
@@ -52,7 +52,7 @@
         "display": false
     },
     "FIGHT_LOSS": {
-        "value": 2.0,
+        "value": 5.0,
         "type": "double",
         "name": "Coeff. en. combattimento",
         "display": true
@@ -70,7 +70,7 @@
         "display": true
     },
     "BONUS_RATE": {
-        "value": 1.0,
+        "value": 0.2,
         "type": "double",
         "name": "Frazione banchi",
         "display": true
