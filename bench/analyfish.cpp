@@ -57,8 +57,10 @@ void simul()
 	std::string line;
 	ifstream myfile("values.csv");
 	vector<int> fish_num;
+	vector<int> food_num;
 	vector<double> kindness;
 	vector<double> speed;
+	vector<double> age;
 	vector<vector<float>> matrix;
 	int num_righe = 0;
 
@@ -72,17 +74,20 @@ void simul()
 		}
 		//numero pesci
 		fish_num.push_back(get_int(line, 2));
+		food_num.push_back(get_int(line, 3));
 		val.push_back(get_int(line, 0));
 		val.push_back(get_int(line, 1));
 		val.push_back(get_int(line, 2));
 		val.push_back(get_int(line, 3));
 		kindness.push_back(0);
 		speed.push_back(0);
+		age.push_back(0);
 		//calcolo altruismo medio e velocità media
 		for (int j = 0; j < fish_num[num_righe]; j++)
 		{
 			kindness[num_righe] += get_int(line, 4 + 5 * j);
 			speed[num_righe] += get_int(line, 5 + 5 * j);
+			age[num_righe] += get_int(line, 7 + 5 * j);
 			val.push_back(get_int(line, 4 + 5 * j));
 			val.push_back(get_int(line, 5 + 5 * j));
 			val.push_back(get_int(line, 6 + 5 * j));
@@ -91,6 +96,7 @@ void simul()
 		}
 		kindness[num_righe] /= fish_num[num_righe];
 		speed[num_righe] /= fish_num[num_righe];
+		age[num_righe] /= fish_num[num_righe];
 		matrix.push_back(val);
 	}
 
@@ -139,8 +145,8 @@ graph4->Draw("AP");
 	TCanvas *c2 = new TCanvas("c2", "c2");
 
 	TGraph *graph2 = new TGraph(num_righe);
-	graph2->SetTitle("Velocità e altruismo");
-	graph2->GetXaxis()->SetTitle("Velocità");
+	graph2->SetTitle("Velocita' e altruismo");
+	graph2->GetXaxis()->SetTitle("Velocita'");
 	graph2->GetYaxis()->SetTitle("Altruismo");
 	for (int i = 0; i < num_righe; i++)
 	{
@@ -148,6 +154,35 @@ graph4->Draw("AP");
 	}
 	graph2->Draw("AP");
 
+	//...................................................................... grafico altruismo ed età
+	TCanvas *c6 = new TCanvas("c6", "c6");
+	
+	int skip6 = 3000;
+
+	TGraph *graph6 = new TGraph(num_righe - skip6);
+	graph6->SetTitle("Altruismo ed eta' media");
+	graph6->GetXaxis()->SetTitle("Altruismo");
+	graph6->GetYaxis()->SetTitle("Eta' media");
+	for (int i = 0; i < num_righe - skip6; i++)
+	{
+		graph6->SetPoint(i, kindness[i+skip6], age[i+skip6]);
+	}
+	graph6->Draw("AP");
+	
+	//...................................................................... grafico cibo e pesci nelle ultiime tot epoche per vedere se c'è eq
+	TCanvas *c7 = new TCanvas("c7", "c7");
+	
+	int last7 = 10000;   //ultimi tot dati
+
+	TGraph *graph7 = new TGraph(last7);
+	graph7->SetTitle("Cibo e pesci");
+	graph7->GetXaxis()->SetTitle("Cibo");
+	graph7->GetYaxis()->SetTitle("Pesci");
+	for (int i = 0; i < last7; i++)
+	{
+		graph7->SetPoint(i, food_num[num_righe - i - 2], fish_num[num_righe - i - 2]);
+	}
+	graph7->Draw("AP");
 	//------------------------------------------------------------------ istogramma altruismo medio sulle ultime n epoche per ogni campo
 
 	int last_n = 100;
@@ -197,6 +232,8 @@ graph4->Draw("AP");
 	TFile *file = new TFile ("Graphs.root", "NEW");
 	graph1->Write();
 	graph2->Write();
+	graph6->Write();
+	graph7->Write();
 	h->Write();
 	file->Close();
 	
