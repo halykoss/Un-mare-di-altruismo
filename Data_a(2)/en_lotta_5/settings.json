@@ -14,13 +14,13 @@
         "display": true
     },
     "NUM_OF_FOOD": {
-        "value": 80,
+        "value": 180,
         "type": "int",
         "name": "Numero iniziale cibo",
         "display": true
     },
     "NUM_OF_FOOD_PER_SPAWN": {
-        "value": 8,
+        "value": 10,
         "type": "int",
         "name": "Spawn rate cibo",
         "display": true
@@ -52,7 +52,7 @@
         "display": false
     },
     "FIGHT_LOSS": {
-        "value": 0.02,
+        "value": 10.0,
         "type": "double",
         "name": "Coeff. en. combattimento",
         "display": true
