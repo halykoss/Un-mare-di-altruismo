@@ -1,13 +1,9 @@
 #include <ctime>
 #include <cmath>
 #include <cairomm/context.h>
-#include <glibmm/main.h>
 #include <cstdlib>
 #include <iostream>
 #include "area.h"
-#include "../tile/fish/fish.h"
-#include "../initializer/initializer.h"
-#include "../utils/utils.h"
 #include <mutex>
 #include <thread>
 #include <boost/bind.hpp>
