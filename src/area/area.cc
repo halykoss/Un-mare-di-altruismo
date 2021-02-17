@@ -101,7 +101,7 @@ bool Area::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
 			this->mtx[k][ky]->unlock();
 		}
 	}
-	cr->set_line_width(4.0);
+	cr->set_line_width(2.0);
 	cr->set_source_rgb(0.0, 0.0, 0.0);
 	cr->move_to(Utils::WINDOW_SIZE_W, 0);
   	cr->line_to(Utils::WINDOW_SIZE_W, Utils::WINDOW_SIZE_H * 3);
