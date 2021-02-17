@@ -105,6 +105,17 @@ bool Area::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
 			this->mtx[k][ky]->unlock();
 		}
 	}
+	cr->set_line_width(4.0);
+	cr->set_source_rgb(0.0, 0.0, 0.0);
+	cr->move_to(Utils::WINDOW_SIZE_W, 0);
+  	cr->line_to(Utils::WINDOW_SIZE_W, Utils::WINDOW_SIZE_H * 3);
+	cr->move_to(Utils::WINDOW_SIZE_W * 2, 0);
+  	cr->line_to(Utils::WINDOW_SIZE_W * 2, Utils::WINDOW_SIZE_H * 3);
+	cr->move_to(0, Utils::WINDOW_SIZE_H);
+  	cr->line_to(Utils::WINDOW_SIZE_W * 3, Utils::WINDOW_SIZE_H);
+	cr->move_to(0, Utils::WINDOW_SIZE_H * 2);
+  	cr->line_to(Utils::WINDOW_SIZE_W * 3, Utils::WINDOW_SIZE_H * 2);
+  	cr->stroke();
 	return true;
 }
 
