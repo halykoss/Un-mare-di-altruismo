@@ -56,7 +56,7 @@ INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
 add_executable(
   a.out ${GUI_OPTION} 
   src/area/area.cc 
-  src/initializer/initializer.cc 
+  src/field/field.cc 
   src/tile/tile.cc 
   src/tile/food/food.cc 
   src/tile/fish/fish.cc 
