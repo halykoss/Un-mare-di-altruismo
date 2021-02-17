@@ -1,5 +1,5 @@
 #include "area/area.h"
-#include "initializer/initializer.h"
+#include "field/field.h"
 #include "utils/utils.h"
 #include <gtkmm/application.h>
 #include <gtkmm/window.h>
@@ -34,10 +34,9 @@ int main(int argc, char **argv)
 
    win.add(c);
    c.show();
-   win.set_size_request(810,810);
    win.set_resizable(false);
+   win.set_size_request(810,810);
    // Lancio il thread per i calcoli
-   // thread th1(f, &init, &c, &mtx);
    int res = app->run(win);
    c.stop = true;
    for(int i = 0; i < 9; i++){

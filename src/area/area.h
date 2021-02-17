@@ -3,7 +3,7 @@
 
 #include <gtkmm/drawingarea.h>
 #include "../tile/tile.h"
-#include "../initializer/initializer.h"
+#include "../field/field.h"
 #include <mutex>
 #include <atomic>
 #include <gtkmm.h>
