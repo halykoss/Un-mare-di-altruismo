@@ -49,7 +49,6 @@ cmake-build-debug/
 .vscode/
 
 #Images
-*.png
 *.csv
 
 /cmake-build-debug-coverage/
@@ -57,3 +56,8 @@ cmake-build-debug/
 bench/*.csv
 bench/*.vl
 bench/*.root
+
+json
+os 
+sys
+tk
